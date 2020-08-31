@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Bookmark-switcher",
+  "version": "1.0",
+  "description": "Switch between several bookmark bars in a click!",
+  "icons": {
+    "32": "icons/bookmark-flat.png"
+  },
+  "permissions": [
+    "bookmarks"
+  ],
+  "background": {
+    "scripts": ["bookmark-switcher.js"]
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "icons/bookmark-flat.png",
+      "38": "icons/bookmark-flat.png"
+    },
+    "default_title": "Switch bookmark bar"
+  }
+}
