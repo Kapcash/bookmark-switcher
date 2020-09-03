@@ -1,2 +1,2 @@
 #!/bin/bash
-gzip -cr . > BookmarkSwitcher.zip
+zip -r BookmarkSwitcher.zip src
