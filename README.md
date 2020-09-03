@@ -5,10 +5,13 @@ A Mozilla Firefox extension to switch between several bookmark toolbars.
 **THIS IS STILL UNDER ACTIVE DEVELOPMENT**
 
 **I WILL NOT BE RESPONSIBLE IF YOU LOOSE ANY OF YOUR BOOKMARK**
+Please consider making a backup before installing this add-on.
 
 ## How it works
 
 Just click the new extension icon it provides and you'll have a new bookmark toolbar!
+
+You can also switch the toolbar using the keyboard shortcut Alt+Space
 
 ## What's next?
 

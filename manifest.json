@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Bookmark-switcher",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Switch between several bookmark bars in a click!",
   "developer": {
     "name": "Florent Catiau-Tristant",
@@ -22,5 +22,13 @@
       "38": "icons/bookmark-flat.png"
     },
     "default_title": "Switch bookmark bar"
+  },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+Space"
+      },
+      "description": "Switch bookmark toolbars"
+    }
   }
 }

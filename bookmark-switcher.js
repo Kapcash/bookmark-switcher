@@ -1,32 +1,18 @@
-(function() {
+// (function() {
   const ROOT_FOLDER_ID = 'root_____';
   const MENU_FOLDER_ID = 'menu________';
   const TOOLBAR_FOLDER_ID = 'toolbar_____';
   const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher';
   let TOOLBARS_SWITCHER_ID;
-  let bookmarkToolbarsFolders = []
-  
-  const TOOLBAR_NAME_PREFIX = 'bookmark-switcher';
+  let bookmarkToolbarsFolders = [];
   
   /** Get all bookmarks of a folder */
   function getFolderChildrens(folderId) {
     return browser.bookmarks.getChildren(folderId);
   }
-  
-  /** Switch bookmarks between two folders */
-  function switchFolders(srcFolderId, targetFolderId) {
-    return Promise.all([getFolderChildrens(srcFolderId), getFolderChildrens(targetFolderId)]).then((results) => {
-      const [srcBookmarks, targetBookmarks] = results;
-      for (const src of srcBookmarks) {
-        browser.bookmarks.move(src.id, { parentId: targetFolderId });
-      }
-      for (const target of targetBookmarks) {
-        browser.bookmarks.move(target.id, { parentId: srcFolderId });
-      }
-    });
-  }
-  
-  /** Create a new bookmark folder
+
+  /**
+   * Create a new bookmark folder
    * @param folderName string The folder name
    * @param parentId The bookmark folder id as parent
    */
@@ -37,23 +23,44 @@
       type: "folder",
     });
   }
+
+  function moveToFolder(targetFolderId) {
+    return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId });
+  }
   
-  /** Create a new bookmark toolbar */
-  function createBookmarkBar() {
-    const getNewToolbarName = (index) => `${TOOLBAR_NAME_PREFIX} #${index}`;
+  /** Switch bookmarks between two folders */
+  async function switchFolders(srcFolderId, targetFolderId) {
+    const [srcBookmarks, targetBookmarks] = await Promise.all([getFolderChildrens(srcFolderId), getFolderChildrens(targetFolderId)]);
+    // We have to await all to avoid concurrency move in a same folder -> indexes are messed up with such concurrency!
+    await Promise.all(targetBookmarks.map(moveToFolder(srcFolderId))); // Move to src folder before to avoid having a complete empty folder at a moment
+    await Promise.all(srcBookmarks.map(moveToFolder(targetFolderId)));
+  }
   
-    return getCurrentNbOfToolbars().then((index) => {
-      return createFolder(getNewToolbarName(index + 1), TOOLBARS_SWITCHER_ID).then((newToolbar) => {
-        bookmarkToolbarsFolders.push(newToolbar);
-      });
+  /**
+   * Create a new bookmark toolbar
+   * @param name Optional toolbar name
+   */
+  async function createBookmarkBar(name = 'Anonym Toolbar') {
+    return createFolder(name, TOOLBARS_SWITCHER_ID).then((newToolbar) => {
+      bookmarkToolbarsFolders.push(newToolbar);
     });
   }
   
   /** Returns the current number of existing bookmarks toolbars */
   function getCurrentNbOfToolbars() {
-    return browser.bookmarks.search(TOOLBAR_NAME_PREFIX).then((results) => {
+    return getExistingToolbars().then((results) => {
       return results.length;
     });
+  }
+
+  /** Get the list of additional existing toolbars (excluding the main one) */
+  function getExistingToolbars() {
+    return getFolderChildrens(TOOLBARS_SWITCHER_ID);
+  }
+  
+  /** Get the extension main bookmark folder (where we store hidden toolbars) */
+  function getBookmarkSwitcherFolder() {
+    return browser.bookmarks.search({ title: TOOLBARS_SWITCHER_NAME });
   }
   
   // ==== BUTTON ACTION ==== //
@@ -76,22 +83,25 @@
   
   /** Load existing bookmark toolbars */
   function loadExistingData() {
-    return browser.bookmarks.search(TOOLBAR_NAME_PREFIX).then((results) => {
-      bookmarkToolbarsFolders.push(...results);
+    return getExistingToolbars().then((toolbars) => {
+      bookmarkToolbarsFolders = toolbars;
     });
   }
   
   /** ENTRY POINT */
-  function startExtension() {
+  async function startExtension() {
     browser.browserAction.onClicked.addListener(switchToolbar);
   
-    return browser.bookmarks.search({ title: TOOLBARS_SWITCHER_NAME }).then((results) => {
-      if (results.length === 0) {
-        initExtension();
-      }
-      loadExistingData();
-    });
+    const results = await getBookmarkSwitcherFolder();
+    if (results.length === 0) {
+      // Can't find the extension main folder -> let's initialize it!
+      await initExtension();
+    } else {
+      // Already exists? Then we can register its id
+      TOOLBARS_SWITCHER_ID = results[0].id;
+    }
+    loadExistingData();
   }
   
   startExtension();
-})();
+// })();
