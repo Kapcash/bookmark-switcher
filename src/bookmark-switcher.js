@@ -45,13 +45,6 @@
       bookmarkToolbarsFolders.push(newToolbar);
     });
   }
-  
-  /** Returns the current number of existing bookmarks toolbars */
-  function getCurrentNbOfToolbars() {
-    return getExistingToolbars().then((results) => {
-      return results.length;
-    });
-  }
 
   /** Get the list of additional existing toolbars (excluding the main one) */
   function getExistingToolbars() {
@@ -77,7 +70,6 @@
   function initExtension() {
     return createFolder(TOOLBARS_SWITCHER_NAME).then((mainFolder) => {
       TOOLBARS_SWITCHER_ID = mainFolder.id;
-      return createBookmarkBar();
     });
   }
   
@@ -90,8 +82,6 @@
   
   /** ENTRY POINT */
   async function startExtension() {
-    browser.browserAction.onClicked.addListener(switchToolbar);
-  
     const results = await getBookmarkSwitcherFolder();
     if (results.length === 0) {
       // Can't find the extension main folder -> let's initialize it!

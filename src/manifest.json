@@ -21,7 +21,8 @@
       "19": "icons/bookmark-flat.png",
       "38": "icons/bookmark-flat.png"
     },
-    "default_title": "Switch bookmark bar"
+    "default_title": "Switch bookmark bar",
+    "default_popup": "popup-settings.html"
   },
   "commands": {
     "_execute_browser_action": {

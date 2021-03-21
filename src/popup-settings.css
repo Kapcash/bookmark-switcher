@@ -1,0 +1,15 @@
+h1 {
+  font-size: 1.5rem
+}
+
+#bookmarkBars {
+  list-style: none;
+}
+
+#bookmarkBars li:hover {
+  color: #2a008b;
+}
+
+#bookmarkBars li.active {
+  color: #004fb6;
+}
