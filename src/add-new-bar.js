@@ -2,6 +2,7 @@
  * Create new toolbar folder under _BookmarkSwitcher for current toolbar (1 folder copy for each bar)
  * Fix switching: dont switch between current and chosen folder, move current to their folder, then move select to bookmark bar
  * Styling popup
+ * Add button to remove bar + rename
  */
 
 function createNewBar() {
@@ -15,6 +16,7 @@ function addItemToList(name, id, disabled) {
   const newSwitchButton = document.createElement('button')
   newSwitchButton.disabled = disabled
   newSwitchButton.textContent = name
+  newSwitchButton.id = id
   newSwitchButton.addEventListener('click', () => switchToolbar(id))
   newListItem.appendChild(newSwitchButton)
   listElm.appendChild(newListItem)
@@ -24,11 +26,22 @@ const ROOT_FOLDER_ID = 'root_____';
 const MENU_FOLDER_ID = 'menu________';
 const TOOLBAR_FOLDER_ID = 'toolbar_____';
 const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher';
-let TOOLBARS_SWITCHER_ID;
+let TOOLBARS_SWITCHER_ID, CURRENT_BOOKMARK_FOLDER_ID;
 
 /** Get all bookmarks of a folder */
 function getFolderChildrens(folderId) {
   return browser.bookmarks.getChildren(folderId);
+}
+
+function setCurrentFolderId(id) {
+  let elm = document.getElementById(CURRENT_BOOKMARK_FOLDER_ID)
+  if (elm) { elm.disabled = false }
+  browser.storage.local.set({
+    currentToolbar: id,
+  });
+  CURRENT_BOOKMARK_FOLDER_ID = id
+  elm = document.getElementById(CURRENT_BOOKMARK_FOLDER_ID)
+  if (elm) { elm.disabled = true }
 }
 
 /**
@@ -77,18 +90,19 @@ function getBookmarkSwitcherFolder() {
 }
 
 // ==== BUTTON ACTION ==== //
-function switchToolbar(id) {
-  switchFolders(TOOLBAR_FOLDER_ID, id);
+async function switchToolbar(id) {
+  await switchFolders(TOOLBAR_FOLDER_ID, CURRENT_BOOKMARK_FOLDER_ID);
+  await switchFolders(id, TOOLBAR_FOLDER_ID);
+  setCurrentFolderId(id)
 }
 
 // ==== INIT ==== //
 
 /** Load existing bookmark toolbars */
 function loadExistingData() {
-  addItemToList('Current bookmark bar', undefined, true)
   return getExistingToolbars().then((toolbars) => {
     toolbars.forEach((bar) => {
-      addItemToList(bar.title, bar.id)
+      addItemToList(bar.title, bar.id, CURRENT_BOOKMARK_FOLDER_ID === bar.id)
     })
   });
 }
@@ -96,8 +110,17 @@ function loadExistingData() {
 /** ENTRY POINT */
 async function initPopup() {
   const newBtn = document.getElementById('addNewBarBtn')
+  // === TEMP ===
+  const clearBtn = document.getElementById('clearStorage')
+  clearBtn.addEventListener('click', () => {
+    browser.storage.local.clear()
+  })
+  // =======
+
   newBtn.disabled = true
   
+  const { currentToolbar } = await browser.storage.local.get('currentToolbar')
+  setCurrentFolderId(currentToolbar)
   const results = await getBookmarkSwitcherFolder();
   if (results[0]) {
     // Register toolbar switcher id

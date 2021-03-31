@@ -3,7 +3,7 @@
   const MENU_FOLDER_ID = 'menu________';
   const TOOLBAR_FOLDER_ID = 'toolbar_____';
   const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher';
-  let TOOLBARS_SWITCHER_ID;
+  let TOOLBARS_SWITCHER_ID, currentBookmarkFolderId;
   let bookmarkToolbarsFolders = [];
   
   /** Get all bookmarks of a folder */
@@ -68,9 +68,24 @@
    * Create a new bookmark toolbar folder
    */
   function initExtension() {
-    return createFolder(TOOLBARS_SWITCHER_NAME).then((mainFolder) => {
+    return createFolder(TOOLBARS_SWITCHER_NAME).then(async (mainFolder) => {
       TOOLBARS_SWITCHER_ID = mainFolder.id;
+      const { currentToolbar } = await browser.storage.local.get('currentToolbar');
+      if (!currentToolbar) {
+        createDefaultFolderForCurrentBookmarkBar();
+      }
     });
+  }
+
+  async function createDefaultFolderForCurrentBookmarkBar() {
+    const currentFolder = await createFolder('Current_toolbar', TOOLBARS_SWITCHER_ID);
+    browser.storage.local.set({
+      currentToolbar: currentFolder.id,
+    });
+  }
+
+  function updateCurrentFolder({ changes }) {
+    currentBookmarkFolderId = changes.currentToolbar
   }
   
   /** Load existing bookmark toolbars */
@@ -82,13 +97,23 @@
   
   /** ENTRY POINT */
   async function startExtension() {
+    browser.storage.onChanged.addListener(updateCurrentFolder);
     const results = await getBookmarkSwitcherFolder();
+
     if (results.length === 0) {
       // Can't find the extension main folder -> let's initialize it!
       await initExtension();
     } else {
       // Already exists? Then we can register its id
       TOOLBARS_SWITCHER_ID = results[0].id;
+      browser.storage.local.get('currentToolbar').then((res) => {
+        const folderId = res.currentToolbar;
+        if (folderId) {
+          currentBookmarkFolderId = folderId
+        } else {
+          createDefaultFolderForCurrentBookmarkBar();
+        }
+      });
     }
     loadExistingData();
   }
