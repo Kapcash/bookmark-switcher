@@ -1,35 +1,38 @@
 {
   "manifest_version": 2,
-  "name": "Bookmark-switcher",
-  "version": "0.0.3",
-  "description": "Switch between several bookmark bars in a click!",
-  "developer": {
-    "name": "Florent Catiau-Tristant",
-    "url": "https://github.com/Kapcash"
-  },
-  "icons": {
-    "32": "icons/bookmark-flat.png"
+  "name": "__MSG_extName__",
+  "homepage_url": "http://localhost:8080/",
+  "description": "A Vue Browser Extension",
+  "default_locale": "en",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "browserswitcher@addon.dev",
+      "strict_min_version": "42.0"
+    }
   },
   "permissions": [
-    "bookmarks"
+    "bookmarks",
+    "storage",
+    "<all_urls>",
+    "*://*/*"
   ],
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
   "background": {
-    "scripts": ["bookmark-switcher.js"]
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": false
   },
   "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "__MSG_extName__",
     "default_icon": {
-      "19": "icons/bookmark-flat.png",
-      "38": "icons/bookmark-flat.png"
-    },
-    "default_title": "Switch bookmark bar",
-    "default_popup": "popup-settings.html"
-  },
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Alt+Space"
-      },
-      "description": "Switch bookmark toolbars"
+      "19": "icons/19.png",
+      "38": "icons/38.png"
     }
   }
 }
