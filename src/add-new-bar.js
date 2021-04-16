@@ -5,28 +5,34 @@
  * Add button to remove bar + rename
  */
 
-function createNewBar() {
-  const newBarName = document.getElementById('newBarNameInput').value;
-  createBookmarkBar(newBarName)
-}
-
-function addItemToList(name, id, disabled) {
-  const listElm = document.getElementById('bookmarkBars')
-  const newListItem = document.createElement('li')
-  const newSwitchButton = document.createElement('button')
-  newSwitchButton.disabled = disabled
-  newSwitchButton.textContent = name
-  newSwitchButton.id = id
-  newSwitchButton.addEventListener('click', () => switchToolbar(id))
-  newListItem.appendChild(newSwitchButton)
-  listElm.appendChild(newListItem)
-}
-
 const ROOT_FOLDER_ID = 'root_____';
 const MENU_FOLDER_ID = 'menu________';
 const TOOLBAR_FOLDER_ID = 'toolbar_____';
 const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher';
 let TOOLBARS_SWITCHER_ID, CURRENT_BOOKMARK_FOLDER_ID;
+
+function createNewBar() {
+  const newBarName = document.getElementById('newBarNameInput').value;
+  createBookmarkBar(newBarName)
+}
+
+function addItemToList(name, barId, disabled) {
+  const listElm = document.getElementById('bookmarkBars')
+  const newListItem = document.createElement('li')
+  // Switch button
+  const newSwitchButton = document.createElement('button')
+  newSwitchButton.disabled = disabled
+  newSwitchButton.textContent = name
+  newSwitchButton.id = barId
+  newSwitchButton.addEventListener('click', () => switchToolbar(barId))
+  // Rename button
+  const updateNameBtn = document.createElement('button')
+  updateNameBtn.textContent = '/'
+  updateNameBtn.addEventListener('click', (evt) => updateBarName(evt.target.id))
+
+  newListItem.appendChild(newSwitchButton)
+  listElm.appendChild(newListItem)
+}
 
 /** Get all bookmarks of a folder */
 function getFolderChildrens(folderId) {
@@ -79,6 +85,14 @@ async function createBookmarkBar(name = 'Anonym Toolbar') {
   });
 }
 
+/**
+ * Update a bookmark toolbar name
+ * @param name Toolbar name
+ */
+function updateBarName(barId, name) {
+  return browser.bookmarks.update(barId, { title: name })
+}
+
 /** Get the list of additional existing toolbars (excluding the main one) */
 function getExistingToolbars() {
   return getFolderChildrens(TOOLBARS_SWITCHER_ID);
@@ -126,7 +140,7 @@ async function initPopup() {
     // Register toolbar switcher id
     TOOLBARS_SWITCHER_ID = results[0].id;
   } else {
-    throw Exception("Can't find extension's bookmark folder. Please restart the extension.")
+    throw Error("Can't find extension's bookmark folder. Please restart the extension.")
   }
   await loadExistingData();
 
