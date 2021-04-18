@@ -1,18 +1,18 @@
 <template>
   <div>
-    <BookmarkBarView v-show="!editing" :name="barName" @edit="rename" @select="selectBar" @remove="$emit('remove', barId)" :disabled="isCurrentToolbar" />
-    <BookmarkBarEdit v-show="editing" :name="barName" @rename="updateName" />
+    <BookmarkBarViewConfirm v-show="!editing" :name="barName" @edit="switchState" @select="selectBar" @remove="$emit('remove', barId)" :disabled="isCurrentToolbar" />
+    <BookmarkBarEdit v-show="editing" :name="barName" @rename="updateName" @cancel="switchState" />
   </div>
 </template>
 
 <script>
-import BookmarkBarView from './BookmarkBarView.vue'
+import BookmarkBarViewConfirm from './BookmarkBarViewConfirm.vue'
 import BookmarkBarEdit from './BookmarkBarEdit.vue'
 import { updateBarName, switchToolbar, CURRENT_BOOKMARK_FOLDER_ID } from '@/components/bookmarkHelper'
 
 export default {
   name: 'BookmarkBar',
-  components: { BookmarkBarView, BookmarkBarEdit },
+  components: { BookmarkBarViewConfirm, BookmarkBarEdit },
   props: {
     name: {
       type: String,
@@ -38,8 +38,8 @@ export default {
     async selectBar () {
       return switchToolbar(this.barId)
     },
-    rename () {
-      this.editing = true
+    switchState () {
+      this.editing = !this.editing
     },
     updateName (newName) {
       this.editing = false

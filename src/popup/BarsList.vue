@@ -1,12 +1,16 @@
 <template>
   <div>
-    <ul class="list">
-      <li>
-        <bookmark-bar v-for="bar in bookmarkBars" :key="bar.id" :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
-      </li>
-    </ul>
-    <create-bar @create="addNewBar" />
-    <button @click="clear">CLEAR</button>
+    <section>
+      <ul class="list">
+        <li>
+          <bookmark-bar v-for="bar in bookmarkBars" :key="bar.id" :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
+        </li>
+      </ul>
+    </section>
+    <section>
+      <create-bar class="" @create="addNewBar" />
+    </section>
+    <!-- <button @click="clear">CLEAR</button> -->
   </div>
 </template>
 
@@ -50,5 +54,11 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+section + section {
+  border-top: 1px solid #222;
+  padding-top: 1px;
+  margin-top: 1px;
 }
 </style>

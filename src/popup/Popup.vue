@@ -19,6 +19,7 @@ export default {
 body {
   background-color: #444444;
   margin: -1px;
+  overflow: hidden;
 }
 
 svg {
@@ -35,10 +36,15 @@ svg {
   flex: 1 0 auto;
 }
 
+input {
+  padding-left: 10px;
+}
+
 button, input {
   background-color: #222;
   color: white;
   border: 1px solid #444;
+  outline: none;
 }
 
 button:disabled {
