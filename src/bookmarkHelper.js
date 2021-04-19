@@ -3,8 +3,6 @@ export const ROOT_BOOKMARK_FOLDER = 'menu________'
 
 export const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher'
 
-const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
-
 /** Get bookmark (folder or not) by title
  * @param {string} title The bookmark title to search for
 */
@@ -62,16 +60,4 @@ export function getFolderChildrens (folderId) {
 
 function moveToFolder (targetFolderId) {
   return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId })
-}
-
-/** Store the given id as the current bookmark folder used in the toolbar */
-export function setCurrentFolderId (id) {
-  return browser.storage.local.set({
-    [STORAGE_CURRENT_TOOLBAR_ATTR]: id
-  })
-}
-
-/** Return the current bookmark folder used in the toolbar from storage */
-export function getCurrentFolderId () {
-  return browser.storage.local.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
 }

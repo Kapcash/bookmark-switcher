@@ -3,15 +3,14 @@
 import {
   TOOLBAR_FOLDER_ID,
   getFolderChildrens,
-  getCurrentFolderId,
-  switchFolders,
-  setCurrentFolderId,
-  createBookmarkFolder
+  switchFolders
 } from '@/bookmarkHelper'
 
 import {
   getBookmarkSwitcherFolder,
-  createBookmarkSwitcherFolder
+  createBookmarkSwitcherFolder,
+  createAnonymousCurrentBarFolder,
+  getCurrentFolderId
 } from '@/bookmarkState'
 
 let MAIN_BOOKMARK_FOLDER, currentBookmarkFolderId
@@ -20,11 +19,6 @@ let bookmarkToolbarsFolders = []
 // ==== BUTTON ACTION ==== //
 function switchToolbar () {
   switchFolders(TOOLBAR_FOLDER_ID, bookmarkToolbarsFolders[0].id)
-}
-
-async function createDefaultFolderForCurrentBookmarkBar () {
-  const { id } = await createBookmarkFolder('Current bookmark bar', MAIN_BOOKMARK_FOLDER)
-  setCurrentFolderId(id)
 }
 
 function listenerToStoreChanges () {
@@ -36,10 +30,8 @@ function listenerToStoreChanges () {
 function registerCurrentState (mainFolder) {
   MAIN_BOOKMARK_FOLDER = mainFolder.id
   return getCurrentFolderId().then((currentFolderId) => {
-    if (currentFolderId) {
-      return setCurrentFolderId(currentFolderId)
-    } else {
-      return createDefaultFolderForCurrentBookmarkBar()
+    if (!currentFolderId) {
+      return createAnonymousCurrentBarFolder()
     }
   })
 }
