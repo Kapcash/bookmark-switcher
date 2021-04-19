@@ -8,7 +8,8 @@
 <script>
 import BookmarkBarViewConfirm from './BookmarkBarViewConfirm.vue'
 import BookmarkBarEdit from './BookmarkBarEdit.vue'
-import { updateBarName, switchToolbar, CURRENT_BOOKMARK_FOLDER_ID } from '@/components/bookmarkHelper'
+import { updateBarName } from '@/bookmarkHelper'
+import { switchToolbar, CURRENT_BOOKMARK_FOLDER_ID } from '@/bookmarkState'
 
 export default {
   name: 'BookmarkBar',

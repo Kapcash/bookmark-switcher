@@ -10,7 +10,7 @@
     <section>
       <create-bar class="" @create="addNewBar" />
     </section>
-    <!-- <button @click="clear">CLEAR</button> -->
+    <button @click="clear">CLEAR</button>
   </div>
 </template>
 
@@ -18,7 +18,8 @@
 import { ref } from 'vue'
 import BookmarkBar from '@/components/BookmarkBar.vue'
 import CreateBar from '@/components/CreateBar.vue'
-import { getBookmarkBars, removeFolder } from '@/components/bookmarkHelper'
+import { getBookmarkBars } from '@/bookmarkState'
+import { removeFolder } from '@/bookmarkHelper'
 
 export default {
   name: 'BarsList',
