@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Bookmark-switcher",
+  "name": "Bookmark Switcher",
   "version": "1.0.0",
   "homepage_url": "https://github.com/Kapcash",
-  "description": "Switch between several bookmark bars in a click!",
+  "description": "__MSG_extDescription__",
   "author": "Florent Catiau-Tristant",
   "default_locale": "en",
   "browser_specific_settings": {

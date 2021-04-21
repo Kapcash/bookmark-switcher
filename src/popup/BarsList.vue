@@ -2,15 +2,15 @@
   <div>
     <section>
       <ul class="list">
-        <li>
-          <bookmark-bar v-for="bar in bookmarkBars" :key="bar.id" :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
+        <li v-for="bar in bookmarkBars" :key="bar.id" >
+          <bookmark-bar :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
         </li>
       </ul>
     </section>
     <section>
       <create-bar class="" @create="addNewBar" />
     </section>
-    <button @click="clear">CLEAR</button>
+    <!-- <button @click="clear">CLEAR</button> -->
   </div>
 </template>
 

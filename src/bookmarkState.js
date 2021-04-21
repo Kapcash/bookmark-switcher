@@ -44,7 +44,7 @@ export function createBookmarkSwitcherFolder () {
 }
 
 export async function createAnonymousCurrentBarFolder () {
-  const { id } = await createBookmarkFolder('Current bookmark bar', MAIN_BOOKMARK_FOLDER.value)
+  const { id } = await createBookmarkFolder(browser.i18n.getMessage('defaultBarName'), MAIN_BOOKMARK_FOLDER.value)
   updateCurrentFolderId(id)
 }
 

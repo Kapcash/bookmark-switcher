@@ -4,47 +4,47 @@
     "description": "The addon name"
   },
   "extDescription": {
-    "message": "Switch between several bookmark bars in a click!",
+    "message": "Intervertissez entre plusieurs barres de favoris en un clic !",
     "description": "The addon description"
   },
   "updateTooltip": {
-    "message": "Rename",
+    "message": "Renommer",
     "description": "Tooltip for the renaming button"
   },
   "newBarPlaceholder": {
-    "message": "New bar name",
+    "message": "Nouveau nom",
     "description": "New bar input placeholder"
   },
   "cancel": {
-    "message": "Cancel",
+    "message": "Annuler",
     "description": ""
   },
   "create": {
-    "message": "Create",
+    "message": "Ajouter",
     "description": ""
   },
   "update": {
-    "message": "Update",
+    "message": "Actualiser",
     "description": ""
   },
   "delete": {
-    "message": "Delete",
+    "message": "Supprimer",
     "description": ""
   },
   "rename": {
-    "message": "Rename",
+    "message": "Renommer",
     "description": ""
   },
   "validate": {
-    "message": "Validate",
+    "message": "Valider",
     "description": ""
   },
   "selectBar": {
-    "message": "Select bar",
+    "message": "Sélectionner barre",
     "description": ""
   },
   "defaultBarName": {
-    "message": "Current bookmark bar",
+    "message": "Favoris actuels",
     "description": "Default name for current bookmark bar"
   }
 }

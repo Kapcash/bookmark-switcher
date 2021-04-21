@@ -1,6 +1,6 @@
 <template>
   <form class="row">
-    <input v-model="barName" placeholder="New bar name" class="flex" />
+    <input v-model="barName" :placeholder="newBarPlaceholder" class="flex" />
     <button type="submit" :disabled="!barName" @click="addBar" >
       <!-- <svg height="16px" width="16px" viewBox="0 0 448 448" xmlns="http://www.w3.org/2000/svg"><path d="m408 184h-136c-4.417969 0-8-3.582031-8-8v-136c0-22.089844-17.910156-40-40-40s-40 17.910156-40 40v136c0 4.417969-3.582031 8-8 8h-136c-22.089844 0-40 17.910156-40 40s17.910156 40 40 40h136c4.417969 0 8 3.582031 8 8v136c0 22.089844 17.910156 40 40 40s40-17.910156 40-40v-136c0-4.417969 3.582031-8 8-8h136c22.089844 0 40-17.910156 40-40s-17.910156-40-40-40zm0 0"/></svg> -->
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="16px" width="16px">
@@ -28,7 +28,8 @@ export default {
 
     return {
       barName,
-      addBar
+      addBar,
+      newBarPlaceholder: browser.i18n.getMessage('newBarPlaceholder')
     }
   }
 }
