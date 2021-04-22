@@ -1,3 +1,4 @@
+import _throttle from 'lodash.throttle'
 import { ref } from 'vue'
 import {
   TOOLBAR_FOLDER_ID,
@@ -8,44 +9,36 @@ import {
   switchFolders
 } from './bookmarkHelper'
 
-export const CURRENT_BOOKMARK_FOLDER_ID = ref('')
-export const MAIN_BOOKMARK_FOLDER = ref('')
-
 const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
 
-export async function getBookmarkBars () {
-  CURRENT_BOOKMARK_FOLDER_ID.value = await getCurrentFolderId()
+export const CURRENT_BOOKMARK_FOLDER_ID = ref(null)
+export const MAIN_BOOKMARK_FOLDER = ref(null)
 
+export async function initState () {
   const barsFolder = await getBookmarkSwitcherFolder()
   if (barsFolder) {
     MAIN_BOOKMARK_FOLDER.value = barsFolder.id
-    const folders = await getFolderChildrens(barsFolder.id)
-
-    const folderIds = folders.map(folder => folder.id)
-    if (!folderIds.includes(CURRENT_BOOKMARK_FOLDER_ID.value)) {
-      resetStorage().then(createAnonymousCurrentBarFolder)
-    }
-
-    return folders
   } else {
-    throw Error("Can't find extension's bookmark folder. Please restart the extension.")
+    await createBookmarkSwitcherFolder()
+  }
+
+  const currentFolderId = await getCurrentFolderId()
+  if (!currentFolderId) {
+    await createAnonymousCurrentBarFolder()
+  } else {
+    CURRENT_BOOKMARK_FOLDER_ID.value = currentFolderId
   }
 }
 
-/**
- * Return the current main folder for the extension
- */
-export function getBookmarkSwitcherFolder () {
-  return browser.bookmarks.search({ title: TOOLBARS_SWITCHER_NAME }).then(res => res[0])
-}
+export async function getBookmarkBars () {
+  const folders = await getFolderChildrens(MAIN_BOOKMARK_FOLDER.value)
 
-export function createBookmarkSwitcherFolder () {
-  return createBookmarkFolder(TOOLBARS_SWITCHER_NAME, ROOT_BOOKMARK_FOLDER)
-}
+  const folderIds = folders.map(folder => folder.id)
+  if (!folderIds.includes(CURRENT_BOOKMARK_FOLDER_ID.value)) {
+    resetStorage().then(createAnonymousCurrentBarFolder)
+  }
 
-export async function createAnonymousCurrentBarFolder () {
-  const { id } = await createBookmarkFolder(browser.i18n.getMessage('defaultBarName'), MAIN_BOOKMARK_FOLDER.value)
-  updateCurrentFolderId(id)
+  return folders
 }
 
 /**
@@ -57,14 +50,18 @@ export function createNewBar (folderName) {
   return createBookmarkFolder(folderName, MAIN_BOOKMARK_FOLDER.value).then(({ id }) => updateCurrentFolderId(id))
 }
 
-export async function switchToolbar (id) {
+export const switchToolbar = _throttle(async function (id) {
   await switchFolders(TOOLBAR_FOLDER_ID, CURRENT_BOOKMARK_FOLDER_ID.value)
   await switchFolders(id, TOOLBAR_FOLDER_ID)
   updateCurrentFolderId(id)
+}, 500)
+
+export function resetStorage () {
+  return browser.storage.local.clear()
 }
 
 /** Store the given id as the current bookmark folder used in the toolbar */
-export function updateCurrentFolderId (id) {
+function updateCurrentFolderId (id) {
   return browser.storage.local.set({
     [STORAGE_CURRENT_TOOLBAR_ATTR]: id
   }).then(() => {
@@ -72,11 +69,23 @@ export function updateCurrentFolderId (id) {
   })
 }
 
-/** Return the current bookmark folder used in the toolbar from storage */
-export function getCurrentFolderId () {
-  return browser.storage.local.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
+/**
+ * Return the current main folder for the extension
+ */
+function getBookmarkSwitcherFolder () {
+  return browser.bookmarks.search({ title: TOOLBARS_SWITCHER_NAME }).then(res => res[0])
 }
 
-export function resetStorage () {
-  return browser.storage.local.clear()
+function createBookmarkSwitcherFolder () {
+  return createBookmarkFolder(TOOLBARS_SWITCHER_NAME, ROOT_BOOKMARK_FOLDER)
+}
+
+async function createAnonymousCurrentBarFolder () {
+  const { id } = await createBookmarkFolder(browser.i18n.getMessage('defaultBarName'), MAIN_BOOKMARK_FOLDER.value)
+  updateCurrentFolderId(id)
+}
+
+/** Return the current bookmark folder used in the toolbar from storage */
+function getCurrentFolderId () {
+  return browser.storage.local.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
 }

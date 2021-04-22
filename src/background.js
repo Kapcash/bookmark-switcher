@@ -1,58 +1,52 @@
-/* eslint-disable no-unused-vars */
-
 import {
-  TOOLBAR_FOLDER_ID,
-  getFolderChildrens,
-  switchFolders
-} from '@/bookmarkHelper'
-
-import {
-  getBookmarkSwitcherFolder,
-  createBookmarkSwitcherFolder,
-  createAnonymousCurrentBarFolder,
-  getCurrentFolderId
+  switchToolbar,
+  getBookmarkBars,
+  CURRENT_BOOKMARK_FOLDER_ID,
+  initState
 } from '@/bookmarkState'
 
-let MAIN_BOOKMARK_FOLDER, currentBookmarkFolderId
 let bookmarkToolbarsFolders = []
 
 // ==== BUTTON ACTION ==== //
-function switchToolbar () {
-  switchFolders(TOOLBAR_FOLDER_ID, bookmarkToolbarsFolders[0].id)
+async function switchToNextBar () {
+  // Reload bars in case a new folder has been created
+  await loadExistingBars()
+
+  const currentBarIndex = bookmarkToolbarsFolders.findIndex(bar => bar.id === CURRENT_BOOKMARK_FOLDER_ID.value)
+  const nextBarIndex = (currentBarIndex + 1) % bookmarkToolbarsFolders.length
+  const nextBar = bookmarkToolbarsFolders[nextBarIndex]
+  return switchToolbar(nextBar.id)
 }
 
 function listenerToStoreChanges () {
   browser.storage.onChanged.addListener(({ currentToolbar }) => {
-    currentBookmarkFolderId = currentToolbar.newValue
+    CURRENT_BOOKMARK_FOLDER_ID.value = currentToolbar.newValue
   })
-}
 
-function registerCurrentState (mainFolder) {
-  MAIN_BOOKMARK_FOLDER = mainFolder.id
-  return getCurrentFolderId().then((currentFolderId) => {
-    if (!currentFolderId) {
-      return createAnonymousCurrentBarFolder()
+  browser.commands.onCommand.addListener(function (command) {
+    switch (command) {
+      case 'next_bar':
+        switchToNextBar()
+        break
+      default:
+        break
     }
   })
 }
 
 /** Load existing bookmark toolbars */
 function loadExistingBars () {
-  return getFolderChildrens(MAIN_BOOKMARK_FOLDER).then((toolbars) => {
-    bookmarkToolbarsFolders = toolbars
+  return getBookmarkBars().then((bars) => {
+    bookmarkToolbarsFolders = bars
   })
 }
 
 /** ENTRY POINT */
 async function startExtension () {
+  await initState()
   listenerToStoreChanges()
-  const mainFolder = await getBookmarkSwitcherFolder()
 
-  if (!mainFolder) {
-    await createBookmarkSwitcherFolder()
-  }
-  await registerCurrentState(mainFolder)
-  return loadExistingBars()
+  await loadExistingBars()
 }
 
 startExtension()

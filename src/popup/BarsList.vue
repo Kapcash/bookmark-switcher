@@ -18,7 +18,7 @@
 import { ref } from 'vue'
 import BookmarkBar from '@/components/BookmarkBar.vue'
 import CreateBar from '@/components/CreateBar.vue'
-import { getBookmarkBars } from '@/bookmarkState'
+import { initState, getBookmarkBars, resetStorage } from '@/bookmarkState'
 import { removeFolder } from '@/bookmarkHelper'
 
 export default {
@@ -26,6 +26,7 @@ export default {
   components: { BookmarkBar, CreateBar },
   async setup () {
     const bookmarkBars = ref([])
+    await initState()
     bookmarkBars.value = await getBookmarkBars()
 
     return { bookmarkBars }
@@ -41,7 +42,7 @@ export default {
       })
     },
     clear () {
-      browser.storage.local.clear()
+      resetStorage()
     }
   }
 }
