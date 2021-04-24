@@ -12,6 +12,11 @@ module.exports = {
         background: {
           entry: 'src/background.js'
         }
+      },
+      manifestTransformer: (manifest) => {
+        const addonId = process.env.ADDON_ID
+        manifest.browser_specific_settings.gecko.id = `{${addonId}}`
+        return manifest
       }
     }
   }
