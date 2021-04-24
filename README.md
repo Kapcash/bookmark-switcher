@@ -1,21 +1,22 @@
-# moz-bookmark-switcher
+# bookmark-switcher
 
-A Mozilla Firefox extension to switch between several bookmark toolbars.
+A Browser extension to switch between several bookmark toolbars.
 
-**THIS IS STILL UNDER ACTIVE DEVELOPMENT**
-
-**I WILL NOT BE RESPONSIBLE IF YOU LOOSE ANY OF YOUR BOOKMARK**
+**I WILL NOT BE RESPONSIBLE IF YOU LOOSE ANY OF YOUR BOOKMARK**  
 Please consider making a backup before installing this add-on.
 
 ## How it works
 
-Just click the new extension icon it provides and you'll have a new bookmark toolbar!
+Just click the new extension icon to open the popup.  
+It will give a default name to your current bookmark bar.
 
-You can also switch the toolbar using the keyboard shortcut Alt+Space
+Then, you can add additional bars and rename them.
+
+To switch between your bars, you can:
+ - Click on its name from the popup
+ - Use the keyboard shortcut Alt+Space to switch to the next bar.
 
 ## What's next?
 
-* Adding more than 2 possible toolbars.
-* Possibility to rename the toolbar.
-* Show the toolbar's name somewhere.
 * Automatic bookmark backup.
+* Support more languages
