@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import BarsList from './BarsList.vue'
+import BarsList from '@/components/BarsList.vue'
 
 export default {
   name: 'Popup',
@@ -39,14 +39,12 @@ svg {
 input {
   padding-left: 10px;
 }
-
 button, input {
   background-color: #222;
   color: white;
   border: 1px solid #444;
   outline: none;
 }
-
 button:disabled {
   color: #555;
 }
