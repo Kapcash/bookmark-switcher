@@ -60,12 +60,12 @@ async function _switchToolbar (id) {
 }
 
 export function resetStorage () {
-  return browser.storage.local.clear()
+  return browser.storage.sync.clear()
 }
 
 /** Store the given id as the current bookmark folder used in the toolbar */
 function updateCurrentFolderId (id) {
-  return browser.storage.local.set({
+  return browser.storage.sync.set({
     [STORAGE_CURRENT_TOOLBAR_ATTR]: id
   }).then(() => {
     CURRENT_BOOKMARK_FOLDER_ID.value = id
@@ -90,5 +90,5 @@ async function createAnonymousCurrentBarFolder () {
 
 /** Return the current bookmark folder used in the toolbar from storage */
 function getCurrentFolderId () {
-  return browser.storage.local.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
+  return browser.storage.sync.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
 }
