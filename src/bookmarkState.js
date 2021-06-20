@@ -22,6 +22,9 @@ export async function initState () {
     await createBookmarkSwitcherFolder()
   }
 
+  // Retro compatibility between storage.local -> storage.sync
+  await migrateLocalStorageToSyncStorage()
+
   const currentFolderId = await getCurrentFolderId()
   if (!currentFolderId) {
     await createAnonymousCurrentBarFolder()
@@ -91,4 +94,12 @@ async function createAnonymousCurrentBarFolder () {
 /** Return the current bookmark folder used in the toolbar from storage */
 function getCurrentFolderId () {
   return browser.storage.sync.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
+}
+
+async function migrateLocalStorageToSyncStorage () {
+  const localCurrentToolbarId = await browser.storage.local.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
+  if (localCurrentToolbarId) {
+    updateCurrentFolderId(localCurrentToolbarId)
+    return browser.storage.local.clear()
+  }
 }
