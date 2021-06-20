@@ -42,7 +42,9 @@ export default {
       })
     },
     clear () {
-      resetStorage()
+      if (process.env.NODE_ENV !== 'production') {
+        resetStorage()
+      }
     }
   }
 }
