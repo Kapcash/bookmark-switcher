@@ -1,4 +1,11 @@
 
+## 1.1.0
+
+- Github issue #1: keep bookmark orders when switching. Improved throttling of switching function.
+- Sync current addon state across multiple browsers (from different devices)
+- Auto focus the text input when editing a bookmark bar name
+- Minor style fixes
+  
 ## 1.0.0
 
 - Multiple bars support! 🎉
