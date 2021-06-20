@@ -36,7 +36,7 @@ export default {
     }
   },
   methods: {
-    async selectBar () {
+    selectBar () {
       return switchToolbar(this.barId)
     },
     switchState () {

@@ -44,11 +44,18 @@ export function removeFolder (folderId) {
  * @param {string} targetFolderId The target bookmark folder id
  */
 export async function switchFolders (srcFolderId, targetFolderId) {
-  if (!srcFolderId || !targetFolderId) throw new Error('Source or targed id is undefined!', srcFolderId, targetFolderId)
+  if (!srcFolderId || !targetFolderId) throw new Error('Source or target id is undefined!', srcFolderId, targetFolderId)
+
   const [srcBookmarks, targetBookmarks] = await Promise.all([getFolderChildrens(srcFolderId), getFolderChildrens(targetFolderId)])
-  // We have to await all to avoid concurrency move in a same folder -> indexes are messed up with such concurrency!
-  await Promise.all(targetBookmarks.map(moveToFolder(srcFolderId))) // Move to src folder before to avoid having a complete empty folder at a moment
-  await Promise.all(srcBookmarks.map(moveToFolder(targetFolderId)))
+  const moveToSrcFolder = moveToFolder(srcFolderId)
+  const moveToTargetFolder = moveToFolder(targetFolderId)
+  // Move to src folder before to avoid having a complete empty folder at a moment
+  await Promise.all(targetBookmarks.map(async (from) => {
+    await moveToSrcFolder(from)
+  }))
+  await Promise.all(srcBookmarks.map(async (from) => {
+    await moveToTargetFolder(from)
+  }))
 }
 
 /** Get children bookmarks from a bookmark folder
@@ -59,5 +66,5 @@ export function getFolderChildrens (folderId) {
 }
 
 function moveToFolder (targetFolderId) {
-  return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId })
+  return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId, index: bookmark.index })
 }

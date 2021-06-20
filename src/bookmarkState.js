@@ -50,11 +50,14 @@ export function createNewBar (folderName) {
   return createBookmarkFolder(folderName, MAIN_BOOKMARK_FOLDER.value).then(({ id }) => updateCurrentFolderId(id))
 }
 
-export const switchToolbar = _throttle(async function (id) {
+export const switchToolbar = _throttle(_switchToolbar, 500, { trailing: false })
+
+async function _switchToolbar (id) {
   await switchFolders(TOOLBAR_FOLDER_ID, CURRENT_BOOKMARK_FOLDER_ID.value)
   await switchFolders(id, TOOLBAR_FOLDER_ID)
   updateCurrentFolderId(id)
-}, 500)
+  switchToolbar.cancel()
+}
 
 export function resetStorage () {
   return browser.storage.local.clear()
