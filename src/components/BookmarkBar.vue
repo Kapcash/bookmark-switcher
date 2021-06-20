@@ -1,7 +1,7 @@
 <template>
   <div>
-    <BookmarkBarViewConfirm v-show="!editing" :name="barName" @edit="switchState" @select="selectBar" @remove="$emit('remove', barId)" :disabled="isCurrentToolbar" />
-    <BookmarkBarEdit v-show="editing" :name="barName" @rename="updateName" @cancel="switchState" />
+    <BookmarkBarViewConfirm v-if="!isEditing" :name="barName" @edit="switchState" @select="selectBar" @remove="$emit('remove', barId)" :disabled="isCurrentToolbar" />
+    <BookmarkBarEdit v-else :name="barName" @rename="updateName" @cancel="switchState" />
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       barName: this.name,
-      editing: false
+      isEditing: false
     }
   },
   computed: {
@@ -40,10 +40,10 @@ export default {
       return switchToolbar(this.barId)
     },
     switchState () {
-      this.editing = !this.editing
+      this.isEditing = !this.isEditing
     },
     updateName (newName) {
-      this.editing = false
+      this.isEditing = false
       updateBarName(this.barId, newName).then(() => {
         this.barName = newName
       })

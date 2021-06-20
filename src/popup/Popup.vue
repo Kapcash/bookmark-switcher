@@ -28,7 +28,7 @@ svg {
 
 .row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   height: 32px;
 }
 
@@ -61,5 +61,6 @@ button:hover:enabled {
 button.btn-icon {
   display: grid;
   place-content: center;
+  padding: 0 5px;
 }
 </style>
