@@ -50,12 +50,12 @@ export async function switchFolders (srcFolderId, targetFolderId) {
   const moveToSrcFolder = moveToFolder(srcFolderId)
   const moveToTargetFolder = moveToFolder(targetFolderId)
   // Move to src folder before to avoid having a complete empty folder at a moment
-  await Promise.all(targetBookmarks.map(async (from) => {
+  for (const from of targetBookmarks) {
     await moveToSrcFolder(from)
-  }))
-  await Promise.all(srcBookmarks.map(async (from) => {
+  }
+  for (const from of srcBookmarks) {
     await moveToTargetFolder(from)
-  }))
+  }
 }
 
 /** Get children bookmarks from a bookmark folder
