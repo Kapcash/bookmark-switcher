@@ -1,4 +1,12 @@
 
+## 1.1.2
+
+- Fixed Github issue #1: force move bookmarks sequentially.
+
+## 1.1.1
+
+- Version skipped
+
 ## 1.1.0
 
 - Github issue #1: keep bookmark orders when switching. Improved throttling of switching function.
