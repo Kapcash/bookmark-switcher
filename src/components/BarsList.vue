@@ -8,7 +8,7 @@
       </ul>
     </section>
     <section>
-      <CreateBar class="" @create="addNewBar" />
+      <CreateBar @create="addNewBar" />
     </section>
     <button v-if="isDev" @click="clear">CLEAR</button>
   </div>
