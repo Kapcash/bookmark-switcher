@@ -1,5 +1,7 @@
-export const TOOLBAR_FOLDER_ID = 'toolbar_____'
-export const ROOT_BOOKMARK_FOLDER = 'menu________'
+export const TOOLBAR_FOLDER_ID = process.env.VUE_APP_IS_CHROME === true ? '1' : 'toolbar_____'
+
+export const MENU_BOOKMARK_FOLDER = 'menu________'
+export const OTHER_BOOKMARK_FOLDER = 'unfiled_____'
 
 export const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher'
 
@@ -8,6 +10,10 @@ export const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher'
 */
 export function searchBookmarkByTitle (title) {
   return browser.bookmarks.search({ title })
+}
+
+export function getBookmarkBId (bookmarkId) {
+  return browser.bookmarks.get(bookmarkId).then(res => res[0])
 }
 
 /**
@@ -26,8 +32,7 @@ export function updateBarName (barId, name) {
 export function createBookmarkFolder (folderName, parentId) {
   return browser.bookmarks.create({
     parentId: parentId,
-    title: folderName,
-    type: 'folder'
+    title: folderName
   })
 }
 
@@ -65,6 +70,6 @@ export function getFolderChildrens (folderId) {
   return browser.bookmarks.getChildren(folderId)
 }
 
-function moveToFolder (targetFolderId) {
+export function moveToFolder (targetFolderId) {
   return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId, index: bookmark.index })
 }
