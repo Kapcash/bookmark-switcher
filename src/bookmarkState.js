@@ -62,7 +62,6 @@ export function createNewBar (folderName) {
 export const switchToolbar = _throttle(_switchToolbar, 500, { trailing: false })
 
 async function _switchToolbar (id) {
-  console.log('TOOLBAR', TOOLBAR_FOLDER_ID)
   await switchFolders(TOOLBAR_FOLDER_ID, CURRENT_BOOKMARK_FOLDER_ID.value)
   await switchFolders(id, TOOLBAR_FOLDER_ID)
   updateCurrentFolderId(id)

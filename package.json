@@ -3,8 +3,10 @@
   "version": "1.1.2",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
-    "build": "vue-cli-service build",
+    "serve:firefox": "VUE_APP_IS_CHROME=false vue-cli-service build --mode development --watch",
+    "serve:chrome": "VUE_APP_IS_CHROME=true vue-cli-service build --mode development --watch",
+    "build:firefox": "VUE_APP_IS_CHROME=false vue-cli-service build",
+    "build:chrome": "VUE_APP_IS_CHROME=true vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

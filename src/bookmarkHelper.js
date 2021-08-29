@@ -1,4 +1,4 @@
-export const TOOLBAR_FOLDER_ID = process.env.VUE_APP_IS_CHROME === true ? '1' : 'toolbar_____'
+export const TOOLBAR_FOLDER_ID = process.env.VUE_APP_IS_CHROME === 'true' ? '1' : 'toolbar_____'
 
 export const MENU_BOOKMARK_FOLDER = 'menu________'
 export const OTHER_BOOKMARK_FOLDER = 'unfiled_____'
