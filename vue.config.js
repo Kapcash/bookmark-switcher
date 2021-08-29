@@ -13,6 +13,10 @@ module.exports = {
           entry: 'src/background.js'
         }
       },
+      artifactFilename: ({ name, version }) => {
+        const browser = process.env.VUE_APP_IS_CHROME === 'true' ? 'chrome' : 'firefox'
+        return `${name}-v${version}-${browser}.zip`
+      },
       manifestTransformer: (manifest) => {
         const addonId = process.env.ADDON_ID
         manifest.browser_specific_settings.gecko.id = `{${addonId}}`
