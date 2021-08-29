@@ -17,9 +17,12 @@ export default {
 
 <style>
 body {
+  margin: 0;
+}
+
+body #app {
   background-color: #444444;
-  margin: -1px;
-  overflow: hidden;
+  min-width: 220px;
 }
 
 svg {
