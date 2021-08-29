@@ -4,6 +4,9 @@ import {
   CURRENT_BOOKMARK_FOLDER_ID,
   initState
 } from '@/bookmarkState'
+import {
+  listenStoreChange
+} from '@/bookmarkStorage'
 
 let bookmarkToolbarsFolders = []
 
@@ -15,11 +18,12 @@ async function switchToNextBar () {
   const currentBarIndex = bookmarkToolbarsFolders.findIndex(bar => bar.id === CURRENT_BOOKMARK_FOLDER_ID.value)
   const nextBarIndex = (currentBarIndex + 1) % bookmarkToolbarsFolders.length
   const nextBar = bookmarkToolbarsFolders[nextBarIndex]
+
   return switchToolbar(nextBar.id)
 }
 
 function listenerToStoreChanges () {
-  browser.storage.onChanged.addListener(({ currentToolbar }) => {
+  listenStoreChange(({ currentToolbar }) => {
     CURRENT_BOOKMARK_FOLDER_ID.value = currentToolbar.newValue
   })
 

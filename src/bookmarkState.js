@@ -12,6 +12,10 @@ import {
   MENU_BOOKMARK_FOLDER,
   removeFolder
 } from './bookmarkHelper'
+import {
+  storeKey,
+  getStorageKey
+} from './bookmarkStorage'
 
 const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
 
@@ -31,7 +35,7 @@ export async function initState () {
   // Retro compatibility from "Bookmarks Menu" -> "Other Bookmarks" folder to store BookmarkSwitcher bars
   await migrateFromMenuToOtherBookmarks()
 
-  const currentFolderId = await getCurrentFolderId()
+  const currentFolderId = await getStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
   if (!currentFolderId) {
     await createAnonymousCurrentBarFolder()
   } else {
@@ -74,9 +78,7 @@ export function resetStorage () {
 
 /** Store the given id as the current bookmark folder used in the toolbar */
 function updateCurrentFolderId (id) {
-  return browser.storage.sync.set({
-    [STORAGE_CURRENT_TOOLBAR_ATTR]: id
-  }).then(() => {
+  return storeKey(STORAGE_CURRENT_TOOLBAR_ATTR, id).then(() => {
     CURRENT_BOOKMARK_FOLDER_ID.value = id
   })
 }
@@ -98,11 +100,6 @@ function createBookmarkSwitcherFolder () {
 async function createAnonymousCurrentBarFolder () {
   const { id } = await createBookmarkFolder(browser.i18n.getMessage('defaultBarName'), MAIN_BOOKMARK_FOLDER.value)
   updateCurrentFolderId(id)
-}
-
-/** Return the current bookmark folder used in the toolbar from storage */
-function getCurrentFolderId () {
-  return browser.storage.sync.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
 }
 
 async function migrateLocalStorageToSyncStorage () {
