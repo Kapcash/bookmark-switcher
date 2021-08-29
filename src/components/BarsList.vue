@@ -3,14 +3,14 @@
     <section>
       <ul class="list">
         <li v-for="bar in bookmarkBars" :key="bar.id" >
-          <bookmark-bar :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
+          <BookmarkBar :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
         </li>
       </ul>
     </section>
     <section>
-      <create-bar class="" @create="addNewBar" />
+      <CreateBar class="" @create="addNewBar" />
     </section>
-    <!-- <button @click="clear">CLEAR</button> -->
+    <button v-if="isDev" @click="clear">CLEAR</button>
   </div>
 </template>
 
@@ -25,27 +25,31 @@ export default {
   name: 'BarsList',
   components: { BookmarkBar, CreateBar },
   async setup () {
+    const isDev = process.env.NODE_ENV !== 'production'
     const bookmarkBars = ref([])
-    await initState()
-    bookmarkBars.value = await getBookmarkBars()
 
-    return { bookmarkBars }
-  },
-  methods: {
-    addNewBar (newBar) {
-      this.bookmarkBars.push(newBar)
-    },
-    removeBar (barId) {
+    function addNewBar (newBar) {
+      bookmarkBars.value.push(newBar)
+    }
+
+    function removeBar (barId) {
       removeFolder(barId).then(() => {
-        const barIndex = this.bookmarkBars.findIndex((bookmarkBar) => bookmarkBar.id === barId)
-        this.bookmarkBars.splice(barIndex, 1)
+        const barIndex = bookmarkBars.value.findIndex((bookmarkBar) => bookmarkBar.id === barId)
+        bookmarkBars.value.splice(barIndex, 1)
       })
-    },
-    clear () {
-      if (process.env.NODE_ENV !== 'production') {
+    }
+
+    function clear () {
+      if (isDev) {
         resetStorage()
       }
     }
+
+    await initState()
+
+    bookmarkBars.value = await getBookmarkBars()
+
+    return { isDev, bookmarkBars, addNewBar, removeBar, clear }
   }
 }
 </script>
