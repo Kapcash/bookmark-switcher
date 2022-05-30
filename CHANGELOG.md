@@ -1,4 +1,10 @@
 
+## 1.2.0
+
+- Chrome compatibility!
+- Moved internal addon bookmark folder to "Other bookmarks" instead of "Bookmarks Menu"
+- Fixed popup flickering when creating a new bookmark bar
+
 ## 1.1.2
 
 - Fixed Github issue #1: force move bookmarks sequentially.
