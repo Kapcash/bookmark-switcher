@@ -1,7 +1,7 @@
 import {
   switchToolbar,
   getBookmarkBars,
-  CURRENT_BOOKMARK_FOLDER_ID,
+  currentBookmarkFolderId,
   initState
 } from '@/bookmarkState'
 import {
@@ -15,7 +15,7 @@ async function switchToNextBar () {
   // Reload bars in case a new folder has been created
   await loadExistingBars()
 
-  const currentBarIndex = bookmarkToolbarsFolders.findIndex(bar => bar.id === CURRENT_BOOKMARK_FOLDER_ID.value)
+  const currentBarIndex = bookmarkToolbarsFolders.findIndex(bar => bar.id === currentBookmarkFolderId.value)
   const nextBarIndex = (currentBarIndex + 1) % bookmarkToolbarsFolders.length
   const nextBar = bookmarkToolbarsFolders[nextBarIndex]
 
@@ -24,7 +24,7 @@ async function switchToNextBar () {
 
 function listenerToStoreChanges () {
   listenStoreChange(({ currentToolbar }) => {
-    CURRENT_BOOKMARK_FOLDER_ID.value = currentToolbar.newValue
+    currentBookmarkFolderId.value = currentToolbar.newValue
   })
 
   browser.commands.onCommand.addListener(function (command) {

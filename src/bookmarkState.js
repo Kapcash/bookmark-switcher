@@ -18,14 +18,16 @@ import {
 } from './bookmarkStorage'
 
 const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
+const STORAGE_EXCLUDED_BOOKMARK_ATTR = 'excludedBookmarks'
 
-export const CURRENT_BOOKMARK_FOLDER_ID = ref(null)
-export const MAIN_BOOKMARK_FOLDER = ref(null)
+export const currentBookmarkFolderId = ref(null)
+export const mainBookmarkFolder = ref(null)
+export const excludedBookmarkIds = ref([])
 
 export async function initState () {
   const barsFolder = await findBookmarkSwitcherFolder()
   if (barsFolder) {
-    MAIN_BOOKMARK_FOLDER.value = barsFolder.id
+    mainBookmarkFolder.value = barsFolder.id
   } else {
     await createBookmarkSwitcherFolder()
   }
@@ -39,15 +41,20 @@ export async function initState () {
   if (!currentFolderId) {
     await createAnonymousCurrentBarFolder()
   } else {
-    CURRENT_BOOKMARK_FOLDER_ID.value = currentFolderId
+    currentBookmarkFolderId.value = currentFolderId
+  }
+
+  const storedExcludedBookmarkIds = await getStorageKey(STORAGE_EXCLUDED_BOOKMARK_ATTR)
+  if (storedExcludedBookmarkIds) {
+    excludedBookmarkIds.value = storedExcludedBookmarkIds
   }
 }
 
 export async function getBookmarkBars () {
-  const folders = await getFolderChildrens(MAIN_BOOKMARK_FOLDER.value)
+  const folders = await getFolderChildrens(mainBookmarkFolder.value)
 
   const folderIds = folders.map(folder => folder.id)
-  if (!folderIds.includes(CURRENT_BOOKMARK_FOLDER_ID.value)) {
+  if (!folderIds.includes(currentBookmarkFolderId.value)) {
     resetStorage().then(createAnonymousCurrentBarFolder)
   }
 
@@ -60,14 +67,14 @@ export async function getBookmarkBars () {
  * @param parentId The bookmark folder id as parent
  */
 export function createNewBar (folderName) {
-  return createBookmarkFolder(folderName, MAIN_BOOKMARK_FOLDER.value)
+  return createBookmarkFolder(folderName, mainBookmarkFolder.value)
 }
 
 export const switchToolbar = _throttle(_switchToolbar, 500, { trailing: false })
 
 async function _switchToolbar (id) {
-  await switchFolders(TOOLBAR_FOLDER_ID, CURRENT_BOOKMARK_FOLDER_ID.value)
-  await switchFolders(id, TOOLBAR_FOLDER_ID)
+  await switchFolders(TOOLBAR_FOLDER_ID, currentBookmarkFolderId.value, excludedBookmarkIds.value)
+  await switchFolders(id, TOOLBAR_FOLDER_ID, excludedBookmarkIds.value)
   updateCurrentFolderId(id)
   switchToolbar.cancel()
 }
@@ -79,28 +86,28 @@ export function resetStorage () {
 /** Store the given id as the current bookmark folder used in the toolbar */
 function updateCurrentFolderId (id) {
   return storeKey(STORAGE_CURRENT_TOOLBAR_ATTR, id).then(() => {
-    CURRENT_BOOKMARK_FOLDER_ID.value = id
+    currentBookmarkFolderId.value = id
   })
 }
 
-/**
- * Return the current main folder for the extension
- */
+/** Return the current main folder for the extension */
 function findBookmarkSwitcherFolder () {
   return searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 }
 
 function createBookmarkSwitcherFolder () {
   return createBookmarkFolder(TOOLBARS_SWITCHER_NAME).then(bookmarkSwitchFolder => {
-    MAIN_BOOKMARK_FOLDER.value = bookmarkSwitchFolder.id
+    mainBookmarkFolder.value = bookmarkSwitchFolder.id
     return bookmarkSwitchFolder
   })
 }
 
 async function createAnonymousCurrentBarFolder () {
-  const { id } = await createBookmarkFolder(browser.i18n.getMessage('defaultBarName'), MAIN_BOOKMARK_FOLDER.value)
+  const { id } = await createBookmarkFolder(browser.i18n.getMessage('defaultBarName'), mainBookmarkFolder.value)
   updateCurrentFolderId(id)
 }
+
+/** ===== RETRO COMPATIBILITY METHODS ===== */
 
 async function migrateLocalStorageToSyncStorage () {
   const localCurrentToolbarId = await browser.storage.local.get(STORAGE_CURRENT_TOOLBAR_ATTR).then((storage) => storage[STORAGE_CURRENT_TOOLBAR_ATTR])
@@ -115,7 +122,7 @@ async function migrateFromMenuToOtherBookmarks () {
     return
   }
 
-  const bookmarkSwitcherFolder = await getBookmarkBId(MAIN_BOOKMARK_FOLDER.value)
+  const bookmarkSwitcherFolder = await getBookmarkBId(mainBookmarkFolder.value)
   if (bookmarkSwitcherFolder.parentId === MENU_BOOKMARK_FOLDER) {
     const newMainFolder = await createBookmarkSwitcherFolder()
 

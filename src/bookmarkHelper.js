@@ -48,17 +48,22 @@ export function removeFolder (folderId) {
  * @param {string} srcFolderId The source bookmark folder id
  * @param {string} targetFolderId The target bookmark folder id
  */
-export async function switchFolders (srcFolderId, targetFolderId) {
+export async function switchFolders (srcFolderId, targetFolderId, exceptions = ['78NZ6VgvshgA']) {
   if (!srcFolderId || !targetFolderId) throw new Error('Source or target id is undefined!', srcFolderId, targetFolderId)
 
   const [srcBookmarks, targetBookmarks] = await Promise.all([getFolderChildrens(srcFolderId), getFolderChildrens(targetFolderId)])
-  const moveToSrcFolder = moveToFolder(srcFolderId)
-  const moveToTargetFolder = moveToFolder(targetFolderId)
+
+  const srcBookmarksWithoutPinned = srcBookmarks.filter(target => !exceptions.includes(target.id))
+  const moveToSrcFolder = moveToFolder(srcFolderId, srcBookmarks.length - srcBookmarksWithoutPinned.length)
+
+  const targetBookmarksWithoutPinned = targetBookmarks.filter(target => !exceptions.includes(target.id))
+  const moveToTargetFolder = moveToFolder(targetFolderId, targetBookmarks.length - targetBookmarksWithoutPinned.length)
+
   // Move to src folder before to avoid having a complete empty folder at a moment
-  for (const from of targetBookmarks) {
+  for (const from of targetBookmarksWithoutPinned) {
     await moveToSrcFolder(from)
   }
-  for (const from of srcBookmarks) {
+  for (const from of srcBookmarksWithoutPinned) {
     await moveToTargetFolder(from)
   }
 }
@@ -70,6 +75,6 @@ export function getFolderChildrens (folderId) {
   return browser.bookmarks.getChildren(folderId)
 }
 
-export function moveToFolder (targetFolderId) {
-  return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId, index: bookmark.index })
+export function moveToFolder (targetFolderId, offset = 0) {
+  return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId, index: offset + bookmark.index })
 }

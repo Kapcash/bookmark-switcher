@@ -9,7 +9,7 @@
 import BookmarkBarViewConfirm from './BookmarkBarViewConfirm.vue'
 import BookmarkBarEdit from './BookmarkBarEdit.vue'
 import { updateBarName } from '@/bookmarkHelper'
-import { switchToolbar, CURRENT_BOOKMARK_FOLDER_ID } from '@/bookmarkState'
+import { switchToolbar, currentBookmarkFolderId } from '@/bookmarkState'
 
 export default {
   name: 'BookmarkBar',
@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     isCurrentToolbar () {
-      return this.barId === CURRENT_BOOKMARK_FOLDER_ID.value
+      return this.barId === currentBookmarkFolderId.value
     }
   },
   methods: {
