@@ -111,7 +111,7 @@ async function migrateLocalStorageToSyncStorage () {
 }
 
 async function migrateFromMenuToOtherBookmarks () {
-  if (process.env.VUE_APP_IS_CHROME === true) {
+  if (process.env.VUE_APP_IS_CHROME === 'true') {
     return
   }
 
