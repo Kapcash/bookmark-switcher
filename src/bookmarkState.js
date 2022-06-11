@@ -1,28 +1,26 @@
 import _throttle from 'lodash.throttle'
 import { ref } from 'vue'
 import {
-  TOOLBAR_FOLDER_ID,
-  TOOLBARS_SWITCHER_NAME,
   createBookmarkFolder,
   getFolderChildrens,
   switchFolders,
   moveToFolder,
   getBookmarkBId,
   searchBookmarkByTitle,
-  MENU_BOOKMARK_FOLDER,
   removeFolder
 } from './bookmarkHelper'
 import {
-  storeKey,
-  getStorageKey
-} from './bookmarkStorage'
+  TOOLBAR_FOLDER_ID,
+  TOOLBARS_SWITCHER_NAME,
+  MENU_BOOKMARK_FOLDER,
+  STORAGE_CURRENT_TOOLBAR_ATTR,
+  STORAGE_EXCLUDED_BOOKMARK_ATTR
+} from './constants'
+import { useBrowserStorage } from './composables/useBookmarkStorage'
 
-const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
-const STORAGE_EXCLUDED_BOOKMARK_ATTR = 'excludedBookmarks'
-
-export const currentBookmarkFolderId = ref(null)
+export let currentBookmarkFolderId = ref(null)
 export const mainBookmarkFolder = ref(null)
-export const excludedBookmarkIds = ref([])
+export let excludedBookmarkIds = ref([])
 
 export async function initState () {
   const barsFolder = await findBookmarkSwitcherFolder()
@@ -37,17 +35,15 @@ export async function initState () {
   // Retro compatibility from "Bookmarks Menu" -> "Other Bookmarks" folder to store BookmarkSwitcher bars
   await migrateFromMenuToOtherBookmarks()
 
-  const currentFolderId = await getStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
-  if (!currentFolderId) {
+  const { useBrowserStorageKey } = useBrowserStorage()
+  currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
+
+  // const currentFolderId = await getStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
+  if (!currentBookmarkFolderId.value) {
     await createAnonymousCurrentBarFolder()
-  } else {
-    currentBookmarkFolderId.value = currentFolderId
   }
 
-  const storedExcludedBookmarkIds = await getStorageKey(STORAGE_EXCLUDED_BOOKMARK_ATTR)
-  if (storedExcludedBookmarkIds) {
-    excludedBookmarkIds.value = storedExcludedBookmarkIds
-  }
+  excludedBookmarkIds = await useBrowserStorageKey(STORAGE_EXCLUDED_BOOKMARK_ATTR)
 }
 
 export async function getBookmarkBars () {
@@ -85,9 +81,7 @@ export function resetStorage () {
 
 /** Store the given id as the current bookmark folder used in the toolbar */
 function updateCurrentFolderId (id) {
-  return storeKey(STORAGE_CURRENT_TOOLBAR_ATTR, id).then(() => {
-    currentBookmarkFolderId.value = id
-  })
+  currentBookmarkFolderId.value = id
 }
 
 /** Return the current main folder for the extension */
