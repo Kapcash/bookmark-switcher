@@ -18,5 +18,8 @@ To switch between your bars, you can:
 
 ## What's next?
 
-* Automatic bookmark backup.
+* Removing a bar shouldn't delete the bookmarks, just the folder
+* Automatic bookmark backup
+* Pin bookmarks
+* Current bar indicator
 * Support more languages
