@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BookmarkBarViewConfirm v-if="!isEditing" :name="barName" @edit="switchState" @select="selectBar" @remove="$emit('remove', barId)" :disabled="isCurrentToolbar" />
+    <BookmarkBarViewConfirm v-if="!isEditing" :name="barName" @edit="switchState" @select="$emit('select', barId)" @remove="$emit('remove', barId)" :disabled="active" />
     <BookmarkBarEdit v-else :name="barName" @rename="updateName" @cancel="switchState" />
   </div>
 </template>
@@ -9,7 +9,6 @@
 import BookmarkBarViewConfirm from './BookmarkBarViewConfirm.vue'
 import BookmarkBarEdit from './BookmarkBarEdit.vue'
 import { updateBarName } from '@/bookmarkHelper'
-import { switchToolbar, CURRENT_BOOKMARK_FOLDER_ID } from '@/bookmarkState'
 
 export default {
   name: 'BookmarkBar',
@@ -22,6 +21,10 @@ export default {
     barId: {
       type: String,
       required: true
+    },
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -30,15 +33,7 @@ export default {
       isEditing: false
     }
   },
-  computed: {
-    isCurrentToolbar () {
-      return this.barId === CURRENT_BOOKMARK_FOLDER_ID.value
-    }
-  },
   methods: {
-    selectBar () {
-      return switchToolbar(this.barId)
-    },
     switchState () {
       this.isEditing = !this.isEditing
     },
