@@ -25,9 +25,9 @@ export default {
     return {
       barName,
       addBar,
-      newBarPlaceholder: browser.i18n.getMessage('newBarPlaceholder')
+      newBarPlaceholder: browser.i18n.getMessage('newBarPlaceholder'),
     }
-  }
+  },
 }
 </script>
 

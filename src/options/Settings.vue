@@ -16,7 +16,7 @@ export default {
     // Update switch algorithm
     const test = await searchBookmarkByTitle('_BookmarksSwitcher')
     console.log('booking', test)
-  }
+  },
 }
 </script>
 

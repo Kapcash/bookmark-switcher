@@ -10,8 +10,8 @@ import BarsList from '@/components/BarsList.vue'
 export default {
   name: 'Popup',
   components: {
-    BarsList
-  }
+    BarsList,
+  },
 }
 </script>
 

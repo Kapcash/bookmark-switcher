@@ -47,7 +47,7 @@ export default {
     }
 
     return { isDev, currentBar, bookmarkBars, createBar, deleteBar, switchBar, clear }
-  }
+  },
 }
 </script>
 

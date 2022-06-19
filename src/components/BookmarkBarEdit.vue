@@ -19,8 +19,8 @@ export default {
   props: {
     name: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   setup (props) {
     const bookmarkNameInput = ref(null)
@@ -34,9 +34,9 @@ export default {
       bookmarkNameInput,
       barName,
       cancelTooltip: browser.i18n.getMessage('cancel'),
-      updateBtn: browser.i18n.getMessage('update')
+      updateBtn: browser.i18n.getMessage('update'),
     }
-  }
+  },
 }
 </script>
 

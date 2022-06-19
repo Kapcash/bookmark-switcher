@@ -42,7 +42,7 @@ export function useBrowserStorage (sync = true) {
 
   return {
     useBrowserStorageKey,
-    resetStorage
+    resetStorage,
   }
 }
 

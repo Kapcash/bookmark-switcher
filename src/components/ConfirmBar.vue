@@ -19,9 +19,9 @@ export default {
   data () {
     return {
       validateTooltip: browser.i18n.getMessage('validate'),
-      cancelTooltip: browser.i18n.getMessage('cancel')
+      cancelTooltip: browser.i18n.getMessage('cancel'),
     }
-  }
+  },
 }
 </script>
 

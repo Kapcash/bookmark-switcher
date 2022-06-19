@@ -12,24 +12,24 @@ import BookmarkBarView from './BookmarkBarView.vue'
 export default {
   components: {
     ConfirmBar,
-    BookmarkBarView
+    BookmarkBarView,
   },
   name: 'BookmarkBarViewConfirm',
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     disabled: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   data () {
     return {
       confirming: false,
-      waitingConfirmEvent: undefined
+      waitingConfirmEvent: undefined,
     }
   },
   methods: {
@@ -39,7 +39,7 @@ export default {
     },
     sendWaitingEvent () {
       this.$emit('remove', this.waitingConfirmEvent)
-    }
-  }
+    },
+  },
 }
 </script>

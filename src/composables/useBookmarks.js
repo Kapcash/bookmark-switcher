@@ -17,7 +17,7 @@ export async function useBookmarkBars () {
   })
 
   const barFolders = await getFolderChildrens(switcherFolder.id).then(folders =>
-    Promise.all(folders.map(folder => useBookmarkFolder(folder)))
+    Promise.all(folders.map(folder => useBookmarkFolder(folder))),
   )
   const bars = ref(barFolders)
 
@@ -84,7 +84,7 @@ export async function useBookmarkBars () {
     currentBar,
     currentBarIndex,
     deleteBar,
-    createBar
+    createBar,
   }
 }
 
@@ -92,7 +92,7 @@ export async function useBookmarkFolder (bookmarkFolder) {
   const childrenBookmarks = await getFolderChildrens(bookmarkFolder.id)
   const bar = reactive({
     ...bookmarkFolder,
-    bookmarks: readonly(childrenBookmarks)
+    bookmarks: readonly(childrenBookmarks),
   })
 
   watch(toRef(bar.title), (newName) => {

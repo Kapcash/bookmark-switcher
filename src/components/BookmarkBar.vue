@@ -16,21 +16,21 @@ export default {
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     barId: {
       type: String,
-      required: true
+      required: true,
     },
     active: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data () {
     return {
       barName: this.name,
-      isEditing: false
+      isEditing: false,
     }
   },
   methods: {
@@ -42,7 +42,7 @@ export default {
       updateBarName(this.barId, newName).then(() => {
         this.barName = newName
       })
-    }
-  }
+    },
+  },
 }
 </script>

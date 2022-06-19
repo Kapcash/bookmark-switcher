@@ -29,20 +29,20 @@ export default {
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     disabled: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   data () {
     return {
       selectBarTitle: browser.i18n.getMessage('selectBar'),
       removeTooltip: browser.i18n.getMessage('delete'),
-      renameTooltip: browser.i18n.getMessage('rename')
+      renameTooltip: browser.i18n.getMessage('rename'),
     }
-  }
+  },
 }
 </script>

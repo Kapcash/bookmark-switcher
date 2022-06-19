@@ -18,7 +18,7 @@ export function storeKey (key, value) {
   if (process.env.VUE_APP_IS_CHROME === 'true') {
     return new Promise((resolve, reject) => {
       chrome.storage.sync.set({
-        [key]: value
+        [key]: value,
       }, (res) => {
         if (chrome.runtime.lastError) {
           return reject(chrome.runtime.lastError)
@@ -28,7 +28,7 @@ export function storeKey (key, value) {
     })
   } else {
     return browser.storage.sync.set({
-      [key]: value
+      [key]: value,
     })
   }
 }

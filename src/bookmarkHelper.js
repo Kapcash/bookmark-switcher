@@ -25,7 +25,7 @@ export function updateBarName (barId, name) {
 export function createBookmarkFolder (folderName, parentId) {
   return browser.bookmarks.create({
     parentId: parentId,
-    title: folderName
+    title: folderName,
   })
 }
 
