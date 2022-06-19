@@ -12,7 +12,6 @@
 
 <script>
 import { ref } from 'vue'
-import { createNewBar } from '@/bookmarkState'
 
 export default {
   name: 'CreateBar',
@@ -20,10 +19,7 @@ export default {
     const barName = ref('')
 
     function addBar () {
-      return createNewBar(this.barName).then((newBar) => {
-        barName.value = ''
-        emit('create', newBar)
-      })
+      emit('create', this.barName)
     }
 
     return {

@@ -3,53 +3,50 @@
     <section>
       <ul class="list">
         <li v-for="bar in bookmarkBars" :key="bar.id" >
-          <BookmarkBar :bar-id="bar.id" :name="bar.title" @remove="removeBar" />
+          <BookmarkBar
+            :bar-id="bar.id"
+            :name="bar.title"
+            :active="bar === currentBar"
+            @select="switchBar"
+            @remove="deleteBar"
+          />
         </li>
       </ul>
     </section>
     <section>
-      <CreateBar @create="addNewBar" />
+      <CreateBar @create="createBar" />
     </section>
     <button v-if="isDev" @click="clear">CLEAR</button>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
 import BookmarkBar from '@/components/BookmarkBar.vue'
 import CreateBar from '@/components/CreateBar.vue'
-import { initState, getBookmarkBars, resetStorage } from '@/bookmarkState'
-import { removeFolder } from '@/bookmarkHelper'
+import { useBookmarkBars } from '@/composables/useBookmarks'
+import { useBrowserStorage } from '@/composables/useBrowserStorage'
 
 export default {
   name: 'BarsList',
   components: { BookmarkBar, CreateBar },
   async setup () {
     const isDev = process.env.NODE_ENV !== 'production'
-    const bookmarkBars = ref([])
 
-    function addNewBar (newBar) {
-      bookmarkBars.value.push(newBar)
-    }
+    const { bars: bookmarkBars, currentBar, createBar, deleteBar } = await useBookmarkBars()
 
-    function removeBar (barId) {
-      removeFolder(barId).then(() => {
-        const barIndex = bookmarkBars.value.findIndex((bookmarkBar) => bookmarkBar.id === barId)
-        bookmarkBars.value.splice(barIndex, 1)
-      })
+    function switchBar (barId) {
+      const bookmarkBar = bookmarkBars.value.find(bar => bar.id === barId)
+      currentBar.value = bookmarkBar
     }
 
     function clear () {
       if (isDev) {
+        const { resetStorage } = useBrowserStorage()
         resetStorage()
       }
     }
 
-    await initState()
-
-    bookmarkBars.value = await getBookmarkBars()
-
-    return { isDev, bookmarkBars, addNewBar, removeBar, clear }
+    return { isDev, currentBar, bookmarkBars, createBar, deleteBar, switchBar, clear }
   }
 }
 </script>

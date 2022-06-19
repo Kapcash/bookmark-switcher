@@ -7,9 +7,9 @@ export function useBrowserStorage (sync = true) {
   const storage = getStorage(sync)
 
   function resetStorage () {
-    storage.clear().then(() => {
+    return storage.clear().then(() => {
       for (const key in state) {
-        delete state[key]
+        state[key] = undefined
       }
     })
   }
@@ -23,7 +23,7 @@ export function useBrowserStorage (sync = true) {
     }
 
     watch(stateRef, (newValue, oldValue) => {
-      console.log('Ref updated!', `${key}:`, oldValue, newValue)
+      console.log('Ref updated!', `${key}:`, oldValue, '->', newValue)
       setKey(key, newValue, storage)
     })
 
@@ -35,7 +35,7 @@ export function useBrowserStorage (sync = true) {
     Object.entries(storedState)
       .filter(([key, val]) => val.newValue !== val.oldValue && state[key] !== val.newValue)
       .forEach(([key, { newValue }]) => {
-        console.log('Stored changed!', `${key}:`, state[key], newValue)
+        console.log('Stored changed!', `${key}:`, state[key], '->', newValue)
         state[key] = newValue
       })
   })

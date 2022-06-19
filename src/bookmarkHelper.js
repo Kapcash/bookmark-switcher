@@ -5,7 +5,7 @@ export function searchBookmarkByTitle (title) {
   return browser.bookmarks.search({ title })
 }
 
-export function getBookmarkBId (bookmarkId) {
+export function getBookmarkById (bookmarkId) {
   return browser.bookmarks.get(bookmarkId).then(res => res[0])
 }
 
