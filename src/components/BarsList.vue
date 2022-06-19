@@ -16,7 +16,6 @@
     <section>
       <CreateBar @create="createBar" />
     </section>
-    <button v-if="isDev" @click="clear">CLEAR</button>
   </div>
 </template>
 
@@ -24,14 +23,11 @@
 import BookmarkBar from '@/components/BookmarkBar.vue'
 import CreateBar from '@/components/CreateBar.vue'
 import { useBookmarkBars } from '@/composables/useBookmarks'
-import { useBrowserStorage } from '@/composables/useBrowserStorage'
 
 export default {
   name: 'BarsList',
   components: { BookmarkBar, CreateBar },
   async setup () {
-    const isDev = process.env.NODE_ENV !== 'production'
-
     const { bars: bookmarkBars, currentBar, createBar, deleteBar } = await useBookmarkBars()
 
     function switchBar (barId) {
@@ -39,14 +35,7 @@ export default {
       currentBar.value = bookmarkBar
     }
 
-    function clear () {
-      if (isDev) {
-        const { resetStorage } = useBrowserStorage()
-        resetStorage()
-      }
-    }
-
-    return { isDev, currentBar, bookmarkBars, createBar, deleteBar, switchBar, clear }
+    return { currentBar, bookmarkBars, createBar, deleteBar, switchBar }
   },
 }
 </script>

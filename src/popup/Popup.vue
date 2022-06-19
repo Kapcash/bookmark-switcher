@@ -2,15 +2,20 @@
   <Suspense>
     <BarsList />
   </Suspense>
+  <DevOnly v-if="isDev" />
 </template>
 
 <script>
 import BarsList from '@/components/BarsList.vue'
+import DevOnly from '@/components/DevOnly.vue'
 
 export default {
   name: 'Popup',
-  components: {
-    BarsList,
+  components: { BarsList, DevOnly },
+  setup () {
+    const isDev = process.env.NODE_ENV !== 'production'
+
+    return { isDev }
   },
 }
 </script>
@@ -18,11 +23,11 @@ export default {
 <style>
 body {
   margin: 0;
+  background-color: #444444;
 }
 
 body #app {
-  background-color: #444444;
-  min-width: 220px;
+  min-width: 240px;
 }
 
 svg {
