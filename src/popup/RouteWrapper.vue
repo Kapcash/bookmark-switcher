@@ -84,6 +84,7 @@ export default {
           bar.icon = newIcon
           editing(bar)
         },
+        back: () => editing(bar),
       }
       panel.value = EmojiPicker
     }

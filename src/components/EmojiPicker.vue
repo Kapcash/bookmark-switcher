@@ -1,37 +1,47 @@
 <template>
-  <fieldset class="emoji-grid">
-    <label
-      title="none"
-      :class="['default', { active: !selectedEmoji }]"
-    >
-      <input
-        v-model="selectedEmoji"
-        type="radio"
-        name="emoji"
-        :value="null"
-        hidden
-      >
-    </label>
+  <div>
+    <div class="row">
+      <button class="btn-icon" title="Go back" @click="$emit('back')">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="16px" height="16px" x="0" y="0" viewBox="0 0 64 64"><g><path xmlns="http://www.w3.org/2000/svg" d="m54 30h-39.899l15.278-14.552c.8-.762.831-2.028.069-2.828-.761-.799-2.027-.831-2.828-.069l-17.448 16.62c-.755.756-1.172 1.76-1.172 2.829 0 1.068.417 2.073 1.207 2.862l17.414 16.586c.387.369.883.552 1.379.552.528 0 1.056-.208 1.449-.621.762-.8.731-2.065-.069-2.827l-15.342-14.552h39.962c1.104 0 2-.896 2-2s-.896-2-2-2z"></path></g></svg>
+      </button>
+      <input v-model="filter" placeholder="Filter (english)" class="flex">
+    </div>
 
-    <label
-      v-for="emoji in emojiList"
-      :key="emoji.slug"
-      :class="{ active: selectedEmoji === emoji.character }"
-    >
-      {{ emoji.character }}
-      <input
-        v-model="selectedEmoji"
-        type="radio"
-        name="emoji"
-        :value="emoji.character"
-        hidden
+    <fieldset class="emoji-grid">
+      <label
+        title="none"
+        :class="['default', { active: !selectedEmoji }]"
       >
-    </label>
-  </fieldset>
+        <input
+          v-model="selectedEmoji"
+          type="radio"
+          name="emoji"
+          :value="null"
+          hidden
+        >
+      </label>
+
+      <label
+        v-for="emoji in emojiListFiltered"
+        :key="emoji.slug"
+        :class="{ active: selectedEmoji === emoji.character }"
+        :title="emoji.unicodeName"
+      >
+        {{ emoji.character }}
+        <input
+          v-model="selectedEmoji"
+          type="radio"
+          name="emoji"
+          :value="emoji.character"
+          hidden
+        >
+      </label>
+    </fieldset>
+  </div>
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { EMOJI_API_KEY } from '../constants'
 
 export default {
@@ -39,7 +49,7 @@ export default {
   props: {
     modelValue: { type: [String, null] },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'back'],
   async setup (props, ctx) {
     const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`).then(res => res.json()).catch(() => [])
     const selectedEmoji = computed({
@@ -51,12 +61,21 @@ export default {
       },
     })
 
-    return { emojiList, selectedEmoji }
+    const filter = ref('')
+
+    const emojiListFiltered = computed(() => {
+      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value) && !emoji.unicodeName.match(/^E\d+\.\d.*/))
+    })
+
+    return { filter, emojiListFiltered, selectedEmoji }
   },
 }
 </script>
 
 <style scoped>
+input.row {
+  width: 100%;
+}
 fieldset {
   border: none;
 }
