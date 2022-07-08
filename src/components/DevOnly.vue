@@ -1,6 +1,7 @@
 <template>
   <section v-if="isDev">
-    <button @click="clear">CLEAR</button>
+    <button v-if="isDev" type="button" @click="clear">CLEAR</button>
+    <button v-if="isDev" type="button" @click="setIcon">ICON</button>
   </section>
 </template>
 

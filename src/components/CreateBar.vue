@@ -30,9 +30,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.row {
-  background: yellow;
-}
-</style>

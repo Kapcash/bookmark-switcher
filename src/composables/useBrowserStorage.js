@@ -1,4 +1,5 @@
 import { reactive, toRef, watch } from 'vue'
+import _isEqual from 'lodash.isequal'
 
 // Global shared state
 const state = reactive({})
@@ -15,27 +16,29 @@ export function useBrowserStorage (sync = true) {
   }
 
   async function useBrowserStorageKey (key) {
-    const stateRef = toRef(state, key)
     if (!(key in state)) {
       const initialStoredValue = await getKey(key, storage)
-      console.log('Loading storage value', `${key}:`, initialStoredValue)
-      stateRef.value = initialStoredValue
+      console.debug('Loading storage value', `${key}:`, initialStoredValue)
+      state[key] = initialStoredValue
+
+      watch(() => state[key], (newValue, oldValue) => {
+        console.debug('Ref updated!', `${key}:`, oldValue, '->', newValue)
+        setKey(key, newValue, storage)
+      })
     }
-
-    watch(stateRef, (newValue, oldValue) => {
-      console.log('Ref updated!', `${key}:`, oldValue, '->', newValue)
-      setKey(key, newValue, storage)
-    })
-
     return toRef(state, key)
   }
 
   // Watch changes on store and update ref
   storage.onChanged.addListener((storedState) => {
+    const isEqual = (key, val) => {
+      return _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
+    }
+
     Object.entries(storedState)
-      .filter(([key, val]) => val.newValue !== val.oldValue && state[key] !== val.newValue)
+      .filter(([key, val]) => !isEqual(key, val))
       .forEach(([key, { newValue }]) => {
-        console.log('Stored changed!', `${key}:`, state[key], '->', newValue)
+        console.debug('Stored changed!', `${key}:`, state[key], '->', newValue)
         state[key] = newValue
       })
   })

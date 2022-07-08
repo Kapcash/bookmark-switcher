@@ -3,40 +3,33 @@
     <section>
       <ul class="list">
         <li v-for="bar in bookmarkBars" :key="bar.id" >
-          <BookmarkBar
-            :bar-id="bar.id"
-            :name="bar.title"
-            :active="bar === currentBar"
-            @select="switchBar"
-            @remove="deleteBar"
+          <BookmarkBarView
+            :name="[bar.icon, bar.title].filter(Boolean).join(' ')"
+            :disabled="bar.id === currentBarId"
+            @select="$emit('switch', bar)"
+            @edit="$emit('edit', bar)"
           />
         </li>
       </ul>
     </section>
     <section>
-      <CreateBar @create="createBar" />
+      <CreateBar @create="$emit('create', $event)" />
     </section>
   </div>
 </template>
 
 <script>
-import BookmarkBar from '@/components/BookmarkBar.vue'
+import BookmarkBarView from '@/components/BookmarkBarView.vue'
 import CreateBar from '@/components/CreateBar.vue'
-import { useBookmarkBars } from '@/composables/useBookmarks'
 
 export default {
   name: 'BarsList',
-  components: { BookmarkBar, CreateBar },
-  async setup () {
-    const { bars: bookmarkBars, currentBar, createBar, deleteBar } = await useBookmarkBars()
-
-    function switchBar (barId) {
-      const bookmarkBar = bookmarkBars.value.find(bar => bar.id === barId)
-      currentBar.value = bookmarkBar
-    }
-
-    return { currentBar, bookmarkBars, createBar, deleteBar, switchBar }
+  components: { BookmarkBarView, CreateBar },
+  props: {
+    bookmarkBars: { type: Array, required: true },
+    currentBarId: { type: String, required: true },
   },
+  emits: ['switch', 'edit', 'create', 'remove'],
 }
 </script>
 
@@ -48,11 +41,5 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-section + section {
-  border-top: 1px solid #222;
-  padding-top: 1px;
-  margin-top: 1px;
 }
 </style>

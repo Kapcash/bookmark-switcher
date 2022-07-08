@@ -1,19 +1,14 @@
 <template>
   <form class="row">
-    <input ref="bookmarkNameInput" v-model="barName">
-    <button type="submit" class="btn-icon" @click="$emit('rename', barName)">
-      {{ updateBtn }}
+    <button type="button" title="Icon" class="btn-icon flex-min" @click="$emit('icon')">
+      {{ icon }}
     </button>
-    <button :title="cancelTooltip" class="btn-icon" @click="$emit('cancel')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 512 512">
-        <path d="M284.286,256.002L506.143,34.144c7.811-7.811,7.811-20.475,0-28.285c-7.811-7.81-20.475-7.811-28.285,0L256,227.717    L34.143,5.859c-7.811-7.811-20.475-7.811-28.285,0c-7.81,7.811-7.811,20.475,0,28.285l221.857,221.857L5.858,477.859    c-7.811,7.811-7.811,20.475,0,28.285c3.905,3.905,9.024,5.857,14.143,5.857c5.119,0,10.237-1.952,14.143-5.857L256,284.287    l221.857,221.857c3.905,3.905,9.024,5.857,14.143,5.857s10.237-1.952,14.143-5.857c7.811-7.811,7.811-20.475,0-28.285    L284.286,256.002z" />
-      </svg>
-    </button>
+    <input type="text" title="Name" ref="bookmarkNameInput" v-model="barName">
   </form>
 </template>
 
 <script>
-import { ref, onMounted } from '@vue/runtime-core'
+import { ref, onMounted, computed } from '@vue/runtime-core'
 export default {
   name: 'BookmarkBarEdit',
   props: {
@@ -21,18 +16,31 @@ export default {
       type: String,
       required: true,
     },
+    icon: {
+      type: [String, null],
+      required: false,
+    },
   },
-  setup (props) {
+  emits: ['update:name', 'icon'],
+  setup (props, ctx) {
+    const barName = computed({
+      get () {
+        return props.name
+      },
+      set (name) {
+        ctx.emit('update:name', name)
+      },
+    })
+
     const bookmarkNameInput = ref(null)
-    const barName = ref(props.name)
 
     onMounted(() => {
       bookmarkNameInput.value.focus()
     })
 
     return {
-      bookmarkNameInput,
       barName,
+      bookmarkNameInput,
       cancelTooltip: browser.i18n.getMessage('cancel'),
       updateBtn: browser.i18n.getMessage('update'),
     }
@@ -45,5 +53,9 @@ input {
   width: 0;
   min-width: 0;
   flex: 1 1 auto;
+}
+.flex-min {
+  flex: 0 1 auto;
+  flex-basis: 35px;
 }
 </style>

@@ -1,4 +1,4 @@
-import { ref, reactive, readonly, toRef, watch, computed } from 'vue'
+import { ref, reactive, readonly, watch, computed } from 'vue'
 import _throttle from 'lodash.throttle'
 import { useBrowserStorage } from './useBrowserStorage'
 import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR } from '../constants'
@@ -7,9 +7,10 @@ import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getF
 const switcherFolderPromise = searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 
 export async function useBookmarkBars () {
-  const excludedBookmarkIds = ref([]) // TODO load
   const { useBrowserStorageKey, resetStorage } = useBrowserStorage()
   const currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
+  const barIcons = await useBrowserStorageKey('barIcons')
+  const excludedBookmarkIds = await useBrowserStorageKey('pinnedBookmarks')
 
   // Loads main wrapper folder for bookmark bars
   const switcherFolder = await switcherFolderPromise.then((folder) => {
@@ -17,7 +18,7 @@ export async function useBookmarkBars () {
   })
 
   const barFolders = await getFolderChildrens(switcherFolder.id).then(folders =>
-    Promise.all(folders.map(folder => useBookmarkFolder(folder))),
+    Promise.all(folders.map(folder => useBookmarkFolder(barIcons, excludedBookmarkIds)(folder, folder.id === currentBookmarkFolderId.value ? TOOLBAR_FOLDER_ID : undefined))),
   )
   const bars = ref(barFolders)
 
@@ -32,7 +33,7 @@ export async function useBookmarkBars () {
     currentBar.value = await createBar(anonymousName)
   }
 
-  function deleteBar (barId) {
+  function deleteBar ({ id: barId }) {
     const barIndex = bars.value.findIndex(bar => bar.id === barId)
     if (barIndex >= 0) {
       return removeFolder(bars.value[barIndex].id).then(() => {
@@ -43,7 +44,7 @@ export async function useBookmarkBars () {
 
   function createBar (barName) {
     return createBookmarkFolder(barName, switcherFolder.id)
-      .then(useBookmarkFolder)
+      .then(useBookmarkFolder(barIcons, excludedBookmarkIds))
       .then(newBar => {
         bars.value.push(newBar)
         return newBar
@@ -66,7 +67,6 @@ export async function useBookmarkBars () {
   })
 
   watch(currentBar, (newBar, oldBar) => {
-    console.log('currentBar updated', oldBar, '->', newBar)
     if (oldBar) {
       if (newBar) {
         switchToolbar(oldBar.id, newBar.id)
@@ -76,7 +76,6 @@ export async function useBookmarkBars () {
       }
     }
     currentBookmarkFolderId.value = newBar?.id || null
-    console.log('currentBookmarkFolderId', currentBookmarkFolderId.value, 'newBar', newBar?.id, oldBar?.id)
   })
 
   return {
@@ -88,15 +87,24 @@ export async function useBookmarkBars () {
   }
 }
 
-export async function useBookmarkFolder (bookmarkFolder) {
-  const childrenBookmarks = await getFolderChildrens(bookmarkFolder.id)
+const useBookmarkFolder = (storedIcons, excludedBookmarkIds) => async (bookmarkFolder, childrensParentId) => {
+  const childrenBookmarks = await getFolderChildrens(childrensParentId || bookmarkFolder.id)
+    .then(childrens => childrens.map(children => ({
+      ...children,
+      pinned: computed(() => excludedBookmarkIds.value?.some(excludedId => excludedId === children.id)),
+    })))
   const bar = reactive({
     ...bookmarkFolder,
     bookmarks: readonly(childrenBookmarks),
+    icon: storedIcons.value[bookmarkFolder.id] || null,
   })
 
-  watch(toRef(bar.title), (newName) => {
+  watch(() => bar.title, (newName) => {
     updateBarName(bar.id, newName)
+  })
+
+  watch(() => bar.icon, (newIcon) => {
+    storedIcons.value = { ...storedIcons.value, [bar.id]: newIcon }
   })
 
   return bar
