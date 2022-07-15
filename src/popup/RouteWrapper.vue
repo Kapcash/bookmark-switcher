@@ -30,7 +30,7 @@ export default {
     const { bars: bookmarkBars, currentBar, createBar, deleteBar } = await useBookmarkBars()
     const { useBrowserStorageKey } = useBrowserStorage()
     const excludedBookmarkIds = await useBrowserStorageKey('pinnedBookmarks')
-    updatePopupIcon(computed(() => currentBar.value.icon))
+    updatePopupIcon(computed(() => currentBar.value?.icon))
 
     const panel = shallowRef(BarsList)
     const panelProps = ref({})
@@ -41,14 +41,17 @@ export default {
         title: bar.title,
         icon: bar.icon,
         bookmarks: bar.bookmarks,
-        isActive: bar.id === currentBar.value.id,
+        isActive: bar.id === currentBar.value?.id,
       }
       panelEvents.value = {
         'update:title': (newTitle) => { bar.title = newTitle },
         icon: () => emoji(bar),
         submit: listing,
         cancel: listing,
-        remove: () => { console.log('removing', bar.id) },
+        remove: () => {
+          deleteBar(bar)
+          listing()
+        },
         pin: (bookmarkId) => {
           if (excludedBookmarkIds.value?.some(excluded => excluded === bookmarkId)) {
             excludedBookmarkIds.value = excludedBookmarkIds.value.filter(excluded => excluded !== bookmarkId)
@@ -63,7 +66,7 @@ export default {
     function listing () {
       panelProps.value = {
         bookmarkBars,
-        currentBarId: computed(() => currentBar.value.id),
+        currentBarId: computed(() => currentBar.value?.id),
       }
       panelEvents.value = {
         create: createBar,
@@ -99,14 +102,6 @@ export default {
       panel,
       panelProps,
       panelEvents,
-      editing,
-      listing,
-      emoji,
-      currentBar,
-      bookmarkBars,
-      createBar,
-      deleteBar,
-      switchBar,
     }
   },
 }

@@ -10,7 +10,7 @@ export function useBrowserStorage (sync = true) {
   function resetStorage () {
     return storage.clear().then(() => {
       for (const key in state) {
-        state[key] = undefined
+        state[key] = null
       }
     })
   }
@@ -31,9 +31,7 @@ export function useBrowserStorage (sync = true) {
 
   // Watch changes on store and update ref
   storage.onChanged.addListener((storedState) => {
-    const isEqual = (key, val) => {
-      return _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
-    }
+    const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
 
     Object.entries(storedState)
       .filter(([key, val]) => !isEqual(key, val))

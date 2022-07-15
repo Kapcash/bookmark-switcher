@@ -57,13 +57,13 @@ export async function useBookmarkBars () {
       await switchFolders(TOOLBAR_FOLDER_ID, fromId, excludedBookmarkIds.value)
       await switchFolders(targetId, TOOLBAR_FOLDER_ID, excludedBookmarkIds.value)
     } catch (err) {
-      console.error('Error switching bars from ', fromId, ' to ', targetId)
+      console.error('Error switching bars from ', fromId, ' to ', targetId, err)
     }
     switchToolbar.cancel()
   }
 
   const currentBarIndex = computed(() => {
-    return this.bars.value.findIndex(bar => bar.id === this.currentBar.value.id)
+    return bars.value.findIndex(bar => bar.id === currentBar.value.id)
   })
 
   watch(currentBar, (newBar, oldBar) => {
@@ -96,7 +96,7 @@ const useBookmarkFolder = (storedIcons, excludedBookmarkIds) => async (bookmarkF
   const bar = reactive({
     ...bookmarkFolder,
     bookmarks: readonly(childrenBookmarks),
-    icon: storedIcons.value[bookmarkFolder.id] || null,
+    icon: storedIcons.value?.[bookmarkFolder.id] || null,
   })
 
   watch(() => bar.title, (newName) => {

@@ -5,7 +5,14 @@
     <ul class="undecorate pl-16 overflow-h">
       <li v-for="bookmark of bookmarks" :key="bookmark.id" class="row align-baseline no-overflow">
         <span class="flex ellipsis">{{ bookmark.title }}</span>
-        <button type="button" class="btn-icon flex-0 no-bg" :class="{ active: bookmark.pinned }" @click="pin(bookmark)">
+        <button
+          type="button"
+          class="btn-icon flex-0 no-bg"
+          :class="{ active: bookmark.pinned }"
+          :disabled="!isActive"
+          :title="!isActive && 'Only possible on current active bar'"
+          @click="pin(bookmark)"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" x="0" y="0" viewBox="0 0 512 512">
             <path d="m506.143 175.563c-22.316-22.315-150.052-150.05-169.707-169.705-7.811-7.811-20.475-7.811-28.285 0s-7.81 20.474 0 28.284l14.143 14.143-106.288 106.288c-26.524-5.251-54.055-4.492-80.3 2.287-30.98 8.002-59.374 24.25-82.112 46.989-7.811 7.81-7.81 20.473 0 28.284l98.995 98.995-146.732 146.73c-7.81 7.81-7.81 20.474 0 28.284s20.474 7.811 28.285 0l146.73-146.73 98.994 98.994c3.906 3.906 9.023 5.858 14.143 5.858 5.118 0 10.237-1.953 14.143-5.858 22.737-22.738 38.986-51.132 46.988-82.112 6.779-26.245 7.538-53.775 2.287-80.3l106.289-106.289 14.142 14.142c7.808 7.81 20.473 7.811 28.284 0 7.81-7.81 7.81-20.473.001-28.284zm-184.842 99.989c-5.048 5.048-7.022 12.405-5.181 19.302 11.131 41.68 2.252 86.072-23.134 120.102l-97.967-97.967c-.001-.001-.002-.003-.003-.004s-.002-.002-.004-.003l-97.968-97.968c34.031-25.386 78.424-34.264 120.102-23.134 6.897 1.842 14.254-.132 19.303-5.181l114.13-114.131 84.853 84.852z"></path>
           </svg>
@@ -14,7 +21,7 @@
     </ul>
 
     <div class="row">
-      <button type="submit" title="Update" class="btn-icon success flex">
+      <button type="submit" title="Update" class="btn-icon flex">
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="16px" height="16px" x="0" y="0" viewBox="0 0 64 64">
           <path xmlns="http://www.w3.org/2000/svg" d="m54 30h-39.899l15.278-14.552c.8-.762.831-2.028.069-2.828-.761-.799-2.027-.831-2.828-.069l-17.448 16.62c-.755.756-1.172 1.76-1.172 2.829 0 1.068.417 2.073 1.207 2.862l17.414 16.586c.387.369.883.552 1.379.552.528 0 1.056-.208 1.449-.621.762-.8.731-2.065-.069-2.827l-15.342-14.552h39.962c1.104 0 2-.896 2-2s-.896-2-2-2z"></path>
         </svg>
@@ -98,29 +105,32 @@ export default {
 .pl-16 {
   padding-left: 16px;
 }
-.no-bg {
+button.no-bg {
   background-color: transparent;
 }
-.no-bg svg {
+button.no-bg:disabled {
+  color: #757575;
+}
+button.no-bg svg {
   transition: transform 50ms ease-in;
 }
-.no-bg:hover {
+button.no-bg:hover:not(:disabled) {
   background-color: transparent;
   color: #9bb9df;
 }
-.no-bg:hover svg {
+button.no-bg:hover:not(:disabled) svg {
   transform: rotate(-45deg);
 }
-.no-bg.active {
+button.no-bg.active {
   color: #9bb9df;
 }
-.no-bg.active svg {
+button.no-bg.active svg {
   transform: rotate(-45deg);
 }
-.no-bg.active:hover {
+button.no-bg.active:hover:not(:disabled) {
   color: #6787b1;
 }
-.no-bg.active:hover svg {
+button.no-bg.active:hover:not(:disabled) svg {
   transform: revert;
 }
 </style>

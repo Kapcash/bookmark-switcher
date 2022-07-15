@@ -50,13 +50,7 @@ button, input {
 button:disabled {
   color: #555;
 }
-button:disabled svg {
-  fill: #555;
-}
-button:enabled {
-  cursor: pointer;
-}
-button:not(.btn-icon):hover:enabled {
+button:not(.btn-icon):enabled:hover {
   background-color: #333;
 }
 button:focus {
@@ -68,13 +62,13 @@ button.btn-icon {
   place-content: center;
   padding: 0 5px;
 }
-button.btn-icon:hover {
+button.btn-icon:enabled:hover {
   color: lightblue;
 }
-button.btn-icon.error:hover {
+button.btn-icon.error:enabled:hover {
   color: #ff3939;
 }
-button.btn-icon.success:hover {
+button.btn-icon.success:enabled:hover {
   color: #7db053;
 }
 
