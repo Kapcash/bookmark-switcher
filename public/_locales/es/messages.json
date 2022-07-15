@@ -1,0 +1,74 @@
+{
+  "extName": {
+    "message": "bookmark-switcher-vue",
+    "description": "The addon name"
+  },
+  "extDescription": {
+    "message": "Cambia entre varias barras de marcadores con un solo clic.",
+    "description": "The addon description"
+  },
+  "goBackTooltip": {
+    "message": "Volver",
+    "description": "Tooltip for back navigation button"
+  },
+  "emojiFilter": {
+    "message": "Filtrar...",
+    "description": "Placeholder for emoji search input"
+  },
+  "noneEmojiName": {
+    "message": "Ninguno",
+    "description": "Name for the null emoji symbol"
+  },
+  "changeIconTooltip": {
+    "message": "Seleccionar icono",
+    "description": "Changing icon button tooltip"
+  },
+  "changeNameTooltip": {
+    "message": "Cambiar nombre de barra",
+    "description": "Update name input tooltip"
+  },
+  "pinButtonActiveTooltip": {
+    "message": "Marcapáginar en todos las barras",
+    "description": "Pin button tooltip when inactive"
+  },
+  "pinButtonInactiveTooltip": {
+    "message": "Solo possible en la barra activa",
+    "description": "Pin button tooltip when inactive"
+  },
+  "newBarPlaceholder": {
+    "message": "Nombre de la nueva barra",
+    "description": "New bar input placeholder"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": ""
+  },
+  "create": {
+    "message": "Creer",
+    "description": ""
+  },
+  "edit": {
+    "message": "Actualizar",
+    "description": ""
+  },
+  "delete": {
+    "message": "Borrar",
+    "description": ""
+  },
+  "rename": {
+    "message": "Renombrar",
+    "description": ""
+  },
+  "validate": {
+    "message": "Validar",
+    "description": ""
+  },
+  "selectBar": {
+    "message": "Seleccionar barra",
+    "description": ""
+  },
+  "defaultBarName": {
+    "message": "Barra de marcadores actual",
+    "description": "Default name for current bookmark bar"
+  }
+}
