@@ -50,6 +50,9 @@ button, input {
 button:disabled {
   color: #555;
 }
+button:enabled {
+  cursor: pointer;
+}
 button:not(.btn-icon):enabled:hover {
   background-color: #333;
 }

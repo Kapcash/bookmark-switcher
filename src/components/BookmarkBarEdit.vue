@@ -1,9 +1,9 @@
 <template>
   <form class="row">
-    <button type="button" title="Icon" class="btn-icon flex-min" @click="$emit('icon')">
+    <button type="button" :title="i18n.changeIconTooltip" class="btn-icon flex-min" @click="$emit('icon')">
       {{ icon }}
     </button>
-    <input type="text" title="Name" ref="bookmarkNameInput" v-model="barName">
+    <input type="text" :title="i18n.changeNameTooltip" ref="bookmarkNameInput" v-model="barName">
   </form>
 </template>
 

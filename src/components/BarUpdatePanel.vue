@@ -10,7 +10,7 @@
           class="btn-icon flex-0 no-bg"
           :class="{ active: bookmark.pinned }"
           :disabled="!isActive"
-          :title="!isActive && 'Only possible on current active bar'"
+          :title="!isActive ? i18n.pinButtonInactiveTooltip : i18n.pinButtonActiveTooltip"
           @click="pin(bookmark)"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" x="0" y="0" viewBox="0 0 512 512">
@@ -21,7 +21,7 @@
     </ul>
 
     <div class="row">
-      <button type="submit" title="Update" class="btn-icon flex">
+      <button type="submit" :title="i18n.goBackTooltip" class="btn-icon flex">
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="16px" height="16px" x="0" y="0" viewBox="0 0 64 64">
           <path xmlns="http://www.w3.org/2000/svg" d="m54 30h-39.899l15.278-14.552c.8-.762.831-2.028.069-2.828-.761-.799-2.027-.831-2.828-.069l-17.448 16.62c-.755.756-1.172 1.76-1.172 2.829 0 1.068.417 2.073 1.207 2.862l17.414 16.586c.387.369.883.552 1.379.552.528 0 1.056-.208 1.449-.621.762-.8.731-2.065-.069-2.827l-15.342-14.552h39.962c1.104 0 2-.896 2-2s-.896-2-2-2z"></path>
         </svg>
@@ -30,7 +30,7 @@
 
     <ConfirmBar class="row" @confirm="$emit('remove')">
       <template #activator="{ on }">
-        <button type="button" :title="removeTooltip" class="btn-icon error flex" :disabled="isActive" v-on="on">
+        <button type="button" :title="i18n.delete" class="btn-icon error flex" :disabled="isActive" v-on="on">
           <svg viewBox="0 0 74 74" height="16px" width="16px" xmlns="http://www.w3.org/2000/svg">
             <path d="m52.8 72h-31.6a5.11 5.11 0 0 1 -5.094-4.8l-2.841-47.132a1 1 0 0 1 1-1.06h45.472a1 1 0 0 1 1 1.06l-2.847 47.132a5.11 5.11 0 0 1 -5.09 4.8zm-37.475-50.992 2.781 46.076a3.108 3.108 0 0 0 3.094 2.916h31.6a3.108 3.108 0 0 0 3.1-2.917l2.781-46.076z"/>
             <path d="m62.646 21.008h-51.292a1 1 0 0 1 -1-1v-4.237a7.163 7.163 0 0 1 7.155-7.155h38.983a7.163 7.163 0 0 1 7.155 7.155v4.237a1 1 0 0 1 -1.001 1zm-50.293-2h49.293v-3.237a5.161 5.161 0 0 0 -5.155-5.155h-38.983a5.161 5.161 0 0 0 -5.155 5.155z"/>
@@ -78,9 +78,6 @@ export default {
       confirmDelete,
       onSubmit,
       pin,
-      selectBarTitle: browser.i18n.getMessage('selectBar'),
-      removeTooltip: browser.i18n.getMessage('delete'),
-      renameTooltip: browser.i18n.getMessage('rename'),
     }
   },
 }

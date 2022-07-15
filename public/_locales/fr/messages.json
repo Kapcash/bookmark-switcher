@@ -7,9 +7,33 @@
     "message": "Intervertissez entre plusieurs barres de favoris en un clic !",
     "description": "The addon description"
   },
-  "updateTooltip": {
-    "message": "Renommer",
-    "description": "Tooltip for the renaming button"
+  "goBackTooltip": {
+    "message": "Retour",
+    "description": "Tooltip for back navigation button"
+  },
+  "emojiFilter": {
+    "message": "Filtrer (en anglais)",
+    "description": "Placeholder for emoji search input"
+  },
+  "noneEmojiName": {
+    "message": "Aucun",
+    "description": "Name for the null emoji symbol"
+  },
+  "changeIconTooltip": {
+    "message": "Selectionner icône",
+    "description": "Changing icon button tooltip"
+  },
+  "changeNameTooltip": {
+    "message": "Changer le nom de la barre",
+    "description": "Update name input tooltip"
+  },
+  "pinButtonActiveTooltip": {
+    "message": "Épingler favoris sur toutes les barres",
+    "description": "Pin button tooltip when inactive"
+  },
+  "pinButtonInactiveTooltip": {
+    "message": "Possible uniquement sur la barre de favoris active",
+    "description": "Pin button tooltip when inactive"
   },
   "newBarPlaceholder": {
     "message": "Nouveau nom",
@@ -23,8 +47,8 @@
     "message": "Ajouter",
     "description": ""
   },
-  "update": {
-    "message": "Actualiser",
+  "edit": {
+    "message": "Modifier",
     "description": ""
   },
   "delete": {

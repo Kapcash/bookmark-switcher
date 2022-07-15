@@ -7,9 +7,33 @@
     "message": "Switch between several bookmark bars in a click!",
     "description": "The addon description"
   },
-  "updateTooltip": {
-    "message": "Rename",
-    "description": "Tooltip for the renaming button"
+  "goBackTooltip": {
+    "message": "Go back",
+    "description": "Tooltip for back navigation button"
+  },
+  "emojiFilter": {
+    "message": "Filter...",
+    "description": "Placeholder for emoji search input"
+  },
+  "noneEmojiName": {
+    "message": "None",
+    "description": "Name for the null emoji symbol"
+  },
+  "changeIconTooltip": {
+    "message": "Select icon",
+    "description": "Changing icon button tooltip"
+  },
+  "changeNameTooltip": {
+    "message": "Change bar name",
+    "description": "Update name input tooltip"
+  },
+  "pinButtonActiveTooltip": {
+    "message": "Pin bookmark on all bars",
+    "description": "Pin button tooltip when inactive"
+  },
+  "pinButtonInactiveTooltip": {
+    "message": "Only possible on current active bar",
+    "description": "Pin button tooltip when inactive"
   },
   "newBarPlaceholder": {
     "message": "New bar name",
@@ -23,8 +47,8 @@
     "message": "Create",
     "description": ""
   },
-  "update": {
-    "message": "Update",
+  "edit": {
+    "message": "Edit",
     "description": ""
   },
   "delete": {
