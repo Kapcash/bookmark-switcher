@@ -20,7 +20,8 @@ export default {
     const barName = ref('')
 
     function addBar () {
-      emit('create', this.barName)
+      emit('create', barName.value)
+      barName.value = ''
     }
 
     return {
