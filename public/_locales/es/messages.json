@@ -27,8 +27,12 @@
     "message": "Cambiar nombre de barra",
     "description": "Update name input tooltip"
   },
-  "pinButtonActiveTooltip": {
-    "message": "Marcapáginar en todos las barras",
+  "pin": {
+    "message": "Anclar",
+    "description": "Pin button tooltip when inactive"
+  },
+  "unpin": {
+    "message": "Desanclar",
     "description": "Pin button tooltip when inactive"
   },
   "pinButtonInactiveTooltip": {

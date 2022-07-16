@@ -27,9 +27,13 @@
     "message": "Change bar name",
     "description": "Update name input tooltip"
   },
-  "pinButtonActiveTooltip": {
-    "message": "Pin bookmark on all bars",
-    "description": "Pin button tooltip when inactive"
+  "pin": {
+    "message": "Pin",
+    "description": "Pin button tooltip when not pinned"
+  },
+  "unpin": {
+    "message": "Unpin",
+    "description": "Unpin button tooltip when pinned"
   },
   "pinButtonInactiveTooltip": {
     "message": "Only possible on current active bar",

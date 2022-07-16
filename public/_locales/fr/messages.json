@@ -27,8 +27,12 @@
     "message": "Changer le nom de la barre",
     "description": "Update name input tooltip"
   },
-  "pinButtonActiveTooltip": {
-    "message": "Épingler favoris sur toutes les barres",
+  "pin": {
+    "message": "Épingler",
+    "description": "Pin button tooltip when inactive"
+  },
+  "unpin": {
+    "message": "Détacher",
     "description": "Pin button tooltip when inactive"
   },
   "pinButtonInactiveTooltip": {

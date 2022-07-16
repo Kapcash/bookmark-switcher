@@ -10,7 +10,7 @@
           class="btn-icon flex-0 no-bg"
           :class="{ active: bookmark.pinned }"
           :disabled="!isActive"
-          :title="!isActive ? i18n.pinButtonInactiveTooltip : i18n.pinButtonActiveTooltip"
+          :title="!isActive ? i18n.pinButtonInactiveTooltip : bookmark.pinned ? i18n.unpin : i18n.pin"
           @click="pin(bookmark)"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" x="0" y="0" viewBox="0 0 512 512">
@@ -101,6 +101,9 @@ export default {
 }
 .pl-16 {
   padding-left: 16px;
+}
+ul li span {
+  font-size: 0.875rem;
 }
 button.no-bg {
   background-color: transparent;
