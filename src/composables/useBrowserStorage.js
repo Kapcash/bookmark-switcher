@@ -30,7 +30,8 @@ export function useBrowserStorage (sync = true) {
   }
 
   // Watch changes on store and update ref
-  storage.onChanged.addListener((storedState) => {
+  const storageParent = process.env.VUE_APP_IS_CHROME === 'true' ? chrome.storage : browser.storage
+  storageParent.onChanged.addListener((storedState) => {
     const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
 
     Object.entries(storedState)
