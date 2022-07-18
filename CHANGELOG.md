@@ -1,4 +1,8 @@
 
+## 2.0.1
+
+- Fix `storage.sync.onChanged` exception on Waterfox. Used correct `storage.onChanged` method instead.
+
 ## 2.0.0
 
 - Possibility to pin bookmarks. Pinned bookmarks will always stay on the bookmark bar even after moving to a different bar.
