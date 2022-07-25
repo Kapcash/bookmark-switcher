@@ -1,6 +1,7 @@
 import { watch } from 'vue'
 
 export function updatePopupIcon (emojiRef) {
+  updateActionIcon(emojiRef.value)
   watch(emojiRef, (newEmoji) => {
     updateActionIcon(newEmoji)
   })
