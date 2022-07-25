@@ -1,10 +1,10 @@
 <template>
-  <form class="row">
+  <div class="row">
     <button type="button" :title="i18n.changeIconTooltip" class="btn-icon flex-min" @click="$emit('icon')">
       {{ icon }}
     </button>
     <input type="text" :title="i18n.changeNameTooltip" ref="bookmarkNameInput" v-model="barName">
-  </form>
+  </div>
 </template>
 
 <script>
