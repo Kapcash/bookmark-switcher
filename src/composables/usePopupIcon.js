@@ -8,29 +8,45 @@ export function updatePopupIcon (emojiRef) {
 }
 
 function updateActionIcon (emoji) {
-  const canvas = document.createElement('canvas')
-
-  const ctx = canvas.getContext('2d')
-  const baseImage = new Image()
-
   const isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-  if (isDarkTheme) {
-    baseImage.src = require('../../assets/bookmark-switcher-logo-stroke.png')
-  } else {
-    baseImage.src = require('../../assets/bookmark-switcher-logo-plain.png')
-  }
 
-  baseImage.onload = function () {
-    if (emoji) {
-      ctx.drawImage(baseImage, -10, 0)
-      ctx.font = '52px sans-serif'
-      ctx.fillText(emoji, 12, 60)
+  function getImageData (size = 64) {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    const baseImage = new Image()
+
+    if (isDarkTheme) {
+      baseImage.src = require(`../../assets/icons/bookmark-switcher-logo-stroke-${size}.png`)
     } else {
-      ctx.drawImage(baseImage, 0, 0)
+      baseImage.src = require(`../../assets/icons/bookmark-switcher-logo-plain-${size}.png`)
     }
 
-    const imageData = ctx.getImageData(0, 0, 64, 64)
+    return new Promise((resolve) => {
+      baseImage.onload = function () {
+        if (emoji) {
+          ctx.drawImage(baseImage, 0, 0)
+          ctx.font = `${Math.floor(size * 0.85)}px sans-serif`
+          ctx.fillText(emoji, Math.floor(size * 0.25), Math.floor(size))
+        } else {
+          ctx.drawImage(baseImage, 0, 0)
+        }
 
-    browser.browserAction.setIcon({ imageData })
+        resolve(ctx.getImageData(0, 0, size, size))
+      }
+    })
   }
+
+  Promise.all([
+    getImageData(16),
+    getImageData(32),
+    getImageData(64),
+  ]).then(([size16, size32, size64]) => {
+    browser.browserAction.setIcon({
+      imageData: {
+        16: size16,
+        32: size32,
+        64: size64,
+      },
+    })
+  })
 }
