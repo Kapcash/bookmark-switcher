@@ -1,4 +1,10 @@
 
+## 2.0.2
+
+- Fix popup icon size on non-retina screens
+- Use correct popup icon on browser startup
+- Edit name input: press enter keeps the change
+
 ## 2.0.1
 
 - Fix `storage.sync.onChanged` exception on Waterfox. Used correct `storage.onChanged` method instead.
