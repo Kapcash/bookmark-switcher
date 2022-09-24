@@ -74,5 +74,29 @@
   "defaultBarName": {
     "message": "Favoris actuels",
     "description": "Default name for current bookmark bar"
+  },
+  "shortcutSuccess": {
+    "message": "Shortcut updated successfully!",
+    "description": "Success message after updating shortcut"
+  },
+  "shortcutError": {
+    "message": "Sorry, this shortcut combination seems invalid for the browser :( Please try another one.",
+    "description": "Error message when updating shortcut failed"
+  },
+  "savePreferences": {
+    "message": "Save",
+    "description": "Preferences submit button"
+  },
+  "updateHotkeys": {
+    "message": "Raccourcie pour la barre suivante",
+    "description": "Label for hotkeys preference"
+  },
+  "focusMe": {
+    "message": "Cliquez par ici pour capturer les touches",
+    "description": "User hint for capturing keys"
+  },
+  "currentHotkey": {
+    "message": "Raccourci choisi",
+    "description": "Label for current hotkeys"
   }
 }

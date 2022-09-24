@@ -5,14 +5,19 @@ module.exports = {
       entry: './src/popup/main.js',
       title: 'Popup',
     },
-    // options: {
-    //   template: 'public/browser-extension.html',
-    //   entry: './src/options/main.js',
-    //   title: 'Options'
-    // }
+    options: {
+      template: 'public/browser-extension.html',
+      entry: './src/options/main.js',
+      title: 'Options',
+    },
   },
   pluginOptions: {
     browserExtension: {
+      components: {
+        background: true,
+        popup: true,
+        options: true,
+      },
       componentOptions: {
         background: {
           entry: 'src/background.js',
@@ -27,6 +32,17 @@ module.exports = {
         manifest.browser_specific_settings.gecko.id = `{${addonId}}`
         return manifest
       },
+    },
+  },
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: 'javascript/auto',
+        },
+      ],
     },
   },
 }

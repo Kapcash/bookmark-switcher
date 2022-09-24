@@ -35,13 +35,13 @@
     }
   },
   "options_ui": {
-    "page": "options.html",
-    "browser_style": true
+    "page": "options.html"
   },
   "commands": {
     "next_bar": {
       "suggested_key": {
-        "default": "Alt+Space"
+        "mac": "Alt+Space",
+        "default": "Ctrl+Space"
       },
       "description": "Switch bookmark toolbars"
     }
