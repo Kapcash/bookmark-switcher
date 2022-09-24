@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <button type="button" :title="i18n.selectBar" class="flex" :disabled="disabled" @click="$emit('select')" >{{ name }}</button>
+    <button type="button" :title="i18n.selectBar" class="flex" :disabled="disabled" @click="$emit('select')" @keyup="preventClickOnSpace">{{ name }}</button>
     <div class="actions row">
       <button type="button" :title="i18n.edit" class="btn-icon" @click="$emit('edit')">
         <svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 401.52289 401">
@@ -28,5 +28,13 @@ export default {
     },
   },
   emits: ['select', 'edit'],
+  methods: {
+    preventClickOnSpace (event) {
+      // Avoid triggering switching button on space. May conflit with default hotkey Alt+Space and trigger two switches at same time
+      if (event.keyCode === 32) {
+        event.preventDefault()
+      }
+    },
+  },
 }
 </script>

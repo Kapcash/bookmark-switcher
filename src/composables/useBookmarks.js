@@ -66,16 +66,26 @@ export async function useBookmarkBars () {
     return bars.value.findIndex(bar => bar.id === currentBar.value.id)
   })
 
-  watch(currentBar, (newBar, oldBar) => {
-    if (oldBar) {
+  let changedBarFromExternalScript = false
+
+  watch(currentBookmarkFolderId, (newCurrentId) => {
+    changedBarFromExternalScript = newCurrentId !== currentBar.value?.id
+    if (changedBarFromExternalScript) {
+      currentBar.value = bars.value.find(bar => bar.id === newCurrentId)
+    }
+  })
+
+  watch(currentBar, async (newBar, oldBar) => {
+    if (oldBar && !changedBarFromExternalScript) {
       if (newBar) {
-        switchToolbar(oldBar.id, newBar.id)
+        await switchToolbar(oldBar.id, newBar.id)
       } else {
         // Setting current to null -> rollback to previous value
         currentBar.value = oldBar
       }
     }
     currentBookmarkFolderId.value = newBar?.id || null
+    changedBarFromExternalScript = false
   })
 
   return {

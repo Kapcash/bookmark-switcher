@@ -8,6 +8,7 @@ useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => 
   // ==== BUTTON ACTION ==== //
   switchToNextBar = () => {
     const nextBarIndex = (currentBarIndex.value + 1) % bookmarkBars.value.length
+    console.debug('NEXT BAR', bookmarkBars.value[nextBarIndex].title)
     currentBar.value = bookmarkBars.value[nextBarIndex] || null
   }
 
