@@ -4,12 +4,12 @@
 
     <ul class="undecorate pl-16 overflow-h">
       <li v-for="bookmark of bookmarks" :key="bookmark.id" class="row align-baseline no-overflow">
-        <span class="flex ellipsis">{{ bookmark.title }}</span>
+        <span class="flex ellipsis">{{ bookmark.title || (bookmark.type === 'separator' ? '-----' : '') }}</span>
         <button
           type="button"
           class="btn-icon flex-0 no-bg"
           :class="{ active: bookmark.pinned }"
-          :disabled="!isActive"
+          :disabled="!isActive || bookmark.type === 'separator'"
           :title="!isActive ? i18n.pinButtonInactiveTooltip : bookmark.pinned ? i18n.unpin : i18n.pin"
           @click="pin(bookmark)"
         >
