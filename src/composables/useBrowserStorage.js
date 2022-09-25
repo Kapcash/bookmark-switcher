@@ -8,7 +8,7 @@ export function useBrowserStorage (sync = true) {
   const storage = getStorage(sync)
 
   function resetStorage () {
-    return storage.clear().then(() => {
+    return clear(storage).then(() => {
       for (const key in state) {
         state[key] = null
       }
@@ -33,8 +33,10 @@ export function useBrowserStorage (sync = true) {
   const storageParent = process.env.VUE_APP_IS_CHROME === 'true' ? chrome.storage : browser.storage
   storageParent.onChanged.addListener((storedState) => {
     const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
+    const serializeStoredValue = (val) => !!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0) ? Object.values(val) : val
 
     Object.entries(storedState)
+      .map(([key, { newValue, oldValue }]) => [key, { newValue: serializeStoredValue(newValue), oldValue: serializeStoredValue(oldValue) }])
       .filter(([key, val]) => !isEqual(key, val))
       .forEach(([key, { newValue }]) => {
         console.debug('Stored changed!', `${key}:`, state[key], '->', newValue)
@@ -66,7 +68,9 @@ function getKey (key, storage) {
   } else {
     storagePromise = storage.get(key)
   }
-  return storagePromise.then((storage) => storage[key])
+  return storagePromise.then((storage) => {
+    return storage[key]
+  })
 }
 
 /** Async! Store a new value with the given key */
@@ -78,10 +82,18 @@ function setKey (key, value, storage) {
   }
 }
 
+function clear (storage) {
+  if (process.env.VUE_APP_IS_CHROME === 'true') {
+    return chromeAsync(cb => storage.clear(cb))
+  } else {
+    return storage.clear()
+  }
+}
+
 /** Simulates async behaviour for storage functions on chrome */
-function chromeAsync (action) {
+function chromeAsync (responseCb) {
   return new Promise((resolve, reject) => {
-    action((res) => {
+    responseCb((res) => {
       if (chrome.runtime.lastError) {
         return reject(chrome.runtime.lastError)
       }
