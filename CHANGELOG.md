@@ -1,4 +1,10 @@
 
+## 2.0.3
+
+- Incorrect state when using hotkey action (switch profile) while the popup is opened
+- Remove empty addon options page
+- Display separators correctly on bookmarks list
+
 ## 2.0.2
 
 - Fix popup icon size on non-retina screens
