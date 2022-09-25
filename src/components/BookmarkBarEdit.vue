@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from '@vue/runtime-core'
+import { ref, onMounted, computed } from 'vue'
 export default {
   name: 'BookmarkBarEdit',
   props: {
