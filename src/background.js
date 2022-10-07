@@ -3,6 +3,7 @@ import { useBookmarkBars } from '@/composables/useBookmarks'
 import { updatePopupIcon } from '@/composables/usePopupIcon'
 
 let switchToNextBar = () => { console.warn('Running action before the state is loaded!') }
+let switchToBar = () => { console.warn('Running action before the state is loaded!') }
 
 useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => {
   // ==== BUTTON ACTION ==== //
@@ -12,7 +13,18 @@ useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => 
     currentBar.value = bookmarkBars.value[nextBarIndex] || null
   }
 
+  switchToBar = (barId) => {
+    const targetBar = bookmarkBars.value.find(bar => bar.id === barId)
+    currentBar.value = targetBar || null
+  }
+
   updatePopupIcon(computed(() => currentBar.value?.icon))
+})
+
+browser.runtime.onMessage.addListener(({ currentBarId }) => {
+  if (currentBarId) {
+    switchToBar(currentBarId)
+  }
 })
 
 browser.commands.onCommand.addListener(function (command) {

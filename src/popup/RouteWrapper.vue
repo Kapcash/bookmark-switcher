@@ -93,7 +93,7 @@ export default {
     }
 
     function switchBar (bar) {
-      currentBar.value = bar
+      browser.runtime.sendMessage({ currentBarId: bar.id })
     }
 
     listing()
