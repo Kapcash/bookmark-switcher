@@ -1,4 +1,8 @@
 
+## 2.0.4
+
+- Do not stop switching process when closing popup
+
 ## 2.0.3
 
 - Incorrect state when using hotkey action (switch profile) while the popup is opened
