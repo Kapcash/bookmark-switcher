@@ -1,28 +1,62 @@
 <template>
-  <h1>SETTINGS</h1>
+  <div>
+    <HotkeysInput v-model="hotkeys"/>
+    <button @click="updateShortcut" :disabled="!changedShortcut" >{{ i18n.savePreferences }}</button>
+    <span :class="color">{{ msg }}</span>
+  </div>
 </template>
 
 <script>
-import { searchBookmarkByTitle } from '../bookmarkHelper'
+import HotkeysInput from '@/components/HotkeysInput.vue'
+import { NEXT_BAR_COMMAND_NAME } from '@/constants'
 
 export default {
   name: 'Settings',
-  async mounted () {
-    console.log('SETTIGS')
-    // GET bookmarkSwitcher folder
-    // LIST bookmarks from that folder
-    // Checkbox to pin them
-    // Store it
-    // Update switch algorithm
-    const test = await searchBookmarkByTitle('_BookmarksSwitcher')
-    console.log('booking', test)
+  components: { HotkeysInput },
+  data () {
+    return {
+      hotkeys: '',
+      msg: '',
+      changedShortcut: false,
+    }
+  },
+  async created () {
+    const cmds = await browser.commands.getAll()
+
+    const nextBarCmd = cmds.find(cmd => cmd.name === NEXT_BAR_COMMAND_NAME)
+    this.hotkeys = nextBarCmd?.shortcut || ''
+    this.changedShortcut = false
+  },
+  watch: {
+    hotkeys (newHotkeys, oldHotkeys) {
+      if (oldHotkeys) {
+        this.changedShortcut = true
+      }
+    },
+  },
+  methods: {
+    updateShortcut () {
+      browser.commands.update({
+        name: NEXT_BAR_COMMAND_NAME,
+        shortcut: this.hotkeys,
+      }).then(() => {
+        this.color = 'success'
+        this.msg = this.i18n.shortcutSuccess
+        this.changedShortcut = false
+      }).catch(() => {
+        this.color = 'error'
+        this.msg = this.i18n.shortcutError
+      })
+    },
   },
 }
 </script>
 
 <style>
-html {
-  width: 400px;
-  height: 400px;
+.success {
+  color: green;
+}
+.error {
+  color: red;
 }
 </style>

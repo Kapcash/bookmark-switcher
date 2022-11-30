@@ -74,5 +74,17 @@
   "defaultBarName": {
     "message": "Current bookmark bar",
     "description": "Default name for current bookmark bar"
+  },
+  "shortcutSuccess": {
+    "message": "Shortcut updated successfully!",
+    "description": "Success message after updating shortcut"
+  },
+  "shortcutError": {
+    "message": "Sorry, this shortcut combination is invalid. Please try another one.",
+    "description": "Error message when updating shortcut failed"
+  },
+  "savePreferences": {
+    "message": "Save",
+    "description": "Preferences submit button"
   }
 }

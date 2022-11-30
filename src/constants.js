@@ -5,6 +5,7 @@ export const MENU_BOOKMARK_FOLDER = 'menu________'
 export const OTHER_BOOKMARK_FOLDER = 'unfiled_____'
 
 export const TOOLBARS_SWITCHER_NAME = '_BookmarksSwitcher'
+export const NEXT_BAR_COMMAND_NAME = 'next_bar'
 
 /** Storage keys */
 export const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
