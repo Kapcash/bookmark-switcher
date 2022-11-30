@@ -1,4 +1,8 @@
 
+## 2.0.5
+
+- Allow to switch to new bar just after creating it without needing to close the browser
+
 ## 2.0.4
 
 - Do not stop switching process when closing popup
