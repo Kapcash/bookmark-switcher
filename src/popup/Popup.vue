@@ -5,16 +5,16 @@
       Loading popup...
     </template>
   </Suspense>
-  <!-- <DevOnly v-if="isDev" /> -->
+  <DevOnly v-if="isDev" />
 </template>
 
 <script>
 import RouteWrapper from './RouteWrapper.vue'
-// import DevOnly from '@/components/DevOnly.vue'
+import DevOnly from '@/components/DevOnly.vue'
 
 export default {
   name: 'Popup',
-  components: { RouteWrapper },
+  components: { RouteWrapper, DevOnly },
   setup () {
     const isDev = process.env.NODE_ENV !== 'production'
     return {

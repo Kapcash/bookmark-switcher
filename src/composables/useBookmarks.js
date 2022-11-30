@@ -22,6 +22,22 @@ export async function useBookmarkBars () {
   )
   const bars = ref(barFolders)
 
+  browser.bookmarks.onCreated.addListener((newBookmarkId, bookmarkInfos) => {
+    if (bookmarkInfos.type === 'folder' && bookmarkInfos.parentId === switcherFolder.id && bars.value.every(bar => bar.id !== newBookmarkId)) {
+      useBookmarkFolder(barIcons, excludedBookmarkIds)(bookmarkInfos, undefined).then(newFolder => {
+        console.log('ADDED BOOKMARK FOLDER')
+        bars.value.push(newFolder)
+      })
+    }
+  })
+
+  browser.bookmarks.onRemoved.addListener((deletedBookmarkId, removeInfos) => {
+    if (removeInfos.parentId === switcherFolder.id) {
+      console.log('DEKETED BOOKMARK FOLDER')
+      deleteBar(deletedBookmarkId)
+    }
+  })
+
   const current = bars.value.find(bar => bar.id === currentBookmarkFolderId.value)
   const currentBar = ref(current)
   if (!current) {
@@ -45,9 +61,8 @@ export async function useBookmarkBars () {
   function createBar (barName) {
     return createBookmarkFolder(barName, switcherFolder.id)
       .then(useBookmarkFolder(barIcons, excludedBookmarkIds))
-      .then(newBar => {
-        bars.value.push(newBar)
-        return newBar
+      .catch(err => {
+        console.err('An error occurred while creating a new bar', err)
       })
   }
 
