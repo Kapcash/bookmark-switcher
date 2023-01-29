@@ -69,7 +69,7 @@ button.btn-icon:enabled:hover {
   color: lightblue;
 }
 button.btn-icon.error:enabled:hover {
-  color: #ff3939;
+  color: #be3232;
 }
 button.btn-icon.success:enabled:hover {
   color: #7db053;

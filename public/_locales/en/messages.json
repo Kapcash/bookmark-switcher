@@ -88,15 +88,19 @@
     "description": "Preferences submit button"
   },
   "updateHotkeys": {
-    "message": "Switch bars shortcut",
+    "message": "Switch bars shortcut:",
     "description": "Label for hotkeys preference"
   },
   "focusMe": {
     "message": "Focus me to capture keys",
     "description": "User hint for capturing keys"
   },
+  "optional": {
+    "message": "Optional",
+    "description": "Optional text"
+  },
   "currentHotkey": {
-    "message": "Chosen keyboard shortcut",
+    "message": "Chosen keyboard shortcut:",
     "description": "Label for current hotkeys"
   }
 }

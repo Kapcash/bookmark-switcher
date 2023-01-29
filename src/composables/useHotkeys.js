@@ -1,11 +1,17 @@
 import { computed, ref, watch } from 'vue'
-import { useMagicKeys } from '@vueuse/core'
+import { useMagicKeys } from './useMagicKeys'
 
 export function useHotkeys (disabled) {
   const { ctrl, alt, meta, shift, current } = useMagicKeys()
 
-  const modifiers = ['control', 'ctrl', 'cmd', 'command', 'meta', 'alt', 'shift']
+  const modifiers = ['control', 'ctrl', 'os', 'cmd', 'command', 'meta', 'alt', 'shift']
   const modifiersAndShift = [...modifiers, 'shift']
+  const namingMap = {
+    'os': 'Command',
+    'ctrl': 'Ctrl',
+    'alt': 'Alt',
+    'control': 'MacCtrl',
+  }
 
   const currentModifiers = computed(() => {
     if (!disabled.value) { return [] }
@@ -21,8 +27,18 @@ export function useHotkeys (disabled) {
     if (key.toLowerCase().startsWith('key')) {
       return key.substring(3)
     }
+    if (!key.startsWith('arrow')) {
+      key = key.replace('right', '')
+      key = key.replace('left', '')
+    }
+    if (key.startsWith('digit')) {
+      key = key.replace('digit', '')
+    }
     if (key === ' ') {
       return 'Space'
+    }
+    if (namingMap[key]) {
+      key = namingMap[key]
     }
     return key
   }

@@ -88,15 +88,19 @@
     "description": "Preferences submit button"
   },
   "updateHotkeys": {
-    "message": "Actualizar el atajo de teclado para proxima barra",
+    "message": "Atajo de teclado para proxima barra:",
     "description": "Label for hotkeys preference"
   },
   "focusMe": {
     "message": "Enfócame para capturar las llaves",
     "description": "User hint for capturing keys"
   },
+  "optional": {
+    "message": "Opcional",
+    "description": "Optional text"
+  },
   "currentHotkey": {
-    "message": "Atajo de teclado elegido",
+    "message": "Atajo de teclado elegido:",
     "description": "Label for current hotkeys"
   }
 }

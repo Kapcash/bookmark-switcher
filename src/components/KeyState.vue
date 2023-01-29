@@ -6,6 +6,7 @@
       empty ? 'color-placeholder' : 'color-grey',
       { optional }
     ]"
+    :data-i18n="i18n.optional"
   >
     <template v-if="empty">
       {{ placeholder }}
@@ -47,7 +48,7 @@ defineProps({
   position: relative;
 }
 .key-card.optional::after {
-  content: "(optional)";
+  content: "(" attr(data-i18n) ")";
   position: absolute;
   bottom: -40%;
   left: 0px;

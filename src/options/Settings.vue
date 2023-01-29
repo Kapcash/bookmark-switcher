@@ -1,19 +1,28 @@
 <template>
   <div>
-    <h2>{{ i18n.updateHotkeys }}:</h2>
+    <h2>{{ i18n.updateHotkeys }}</h2>
 
     <div class="shortcut-form">
-      <ShortcutInput v-model="hotkeys" class="shortcut-input" />
+      <ShortcutInput
+        v-model="hotkeys"
+        class="shortcut-input"
+      />
 
       <div class="column">
         <div class="current-shortcut">
-          {{ i18n.currentHotkey }}:
+          {{ i18n.currentHotkey }}
           <KeyState class="hotkey">
             {{ currentHotkeyString }}
           </KeyState>
         </div>
 
-        <button class="save" @click="updateShortcut" :disabled="!changedShortcut" >{{ i18n.savePreferences }}</button>
+        <button
+          class="save"
+          :disabled="!changedShortcut"
+          @click="updateShortcut"
+        >
+          {{ i18n.savePreferences }}
+        </button>
         <span :class="color">{{ msg }}</span>
       </div>
     </div>
@@ -36,13 +45,6 @@ export default {
       color: '',
     }
   },
-  async created () {
-    const cmds = await browser.commands.getAll()
-
-    const nextBarCmd = cmds.find(cmd => cmd.name === NEXT_BAR_COMMAND_NAME)
-    this.hotkeys = nextBarCmd?.shortcut.split('+') || []
-    this.changedShortcut = false
-  },
   computed: {
     currentHotkeyString() {
       return this.hotkeys.map(key => key[0].toUpperCase() + key.slice(1)).join(' + ')
@@ -50,10 +52,18 @@ export default {
   },
   watch: {
     hotkeys (newHotkeys, oldHotkeys) {
-      if (oldHotkeys) {
+      if (oldHotkeys?.length > 0) {
         this.changedShortcut = true
+        this.msg = '';
       }
     },
+  },
+  async created () {
+    const cmds = await browser.commands.getAll()
+
+    const nextBarCmd = cmds.find(cmd => cmd.name === NEXT_BAR_COMMAND_NAME)
+    this.hotkeys = nextBarCmd?.shortcut.split('+') || []
+    this.changedShortcut = false
   },
   methods: {
     async updateShortcut () {
@@ -111,16 +121,28 @@ body {
   background-color: beige;
   margin: 8px;
 }
-.save {
+button.save {
   margin: 8px 0;
   padding: 4px 10px;
   border-radius: 6px;
+  background-color: #34ac47;
+  border: 1px solid beige;
+  font-size: 1.25rem;
+  color: inherit;
+  cursor: pointer;
+}
+button.save:hover {
+  background-color: #44c85a;
+}
+button.save:disabled {
+  background-color: gray;
+  color: lightgray;
+  cursor: not-allowed;
 }
 .success {
   color: green;
 }
 .error {
-  color: red;
+  color: #be3232;
 }
-
 </style>

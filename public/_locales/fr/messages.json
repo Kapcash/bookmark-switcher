@@ -88,15 +88,19 @@
     "description": "Preferences submit button"
   },
   "updateHotkeys": {
-    "message": "Raccourcie pour la barre suivante",
+    "message": "Raccourci pour la barre suivante :",
     "description": "Label for hotkeys preference"
   },
   "focusMe": {
     "message": "Cliquez par ici pour capturer les touches",
     "description": "User hint for capturing keys"
   },
+  "optional": {
+    "message": "Optionnel",
+    "description": "Optional text"
+  },
   "currentHotkey": {
-    "message": "Raccourci choisi",
+    "message": "Raccourci choisi :",
     "description": "Label for current hotkeys"
   }
 }
