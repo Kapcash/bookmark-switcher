@@ -74,5 +74,33 @@
   "defaultBarName": {
     "message": "Barra de marcadores actual",
     "description": "Default name for current bookmark bar"
+  },
+  "shortcutSuccess": {
+    "message": "Shortcut updated successfully!",
+    "description": "Success message after updating shortcut"
+  },
+  "shortcutError": {
+    "message": "Sorry, this shortcut combination is invalid. Please try another one.",
+    "description": "Error message when updating shortcut failed"
+  },
+  "savePreferences": {
+    "message": "Save",
+    "description": "Preferences submit button"
+  },
+  "updateHotkeys": {
+    "message": "Atajo de teclado para proxima barra:",
+    "description": "Label for hotkeys preference"
+  },
+  "focusMe": {
+    "message": "Enfócame para capturar las llaves",
+    "description": "User hint for capturing keys"
+  },
+  "optional": {
+    "message": "Opcional",
+    "description": "Optional text"
+  },
+  "currentHotkey": {
+    "message": "Atajo de teclado elegido:",
+    "description": "Label for current hotkeys"
   }
 }

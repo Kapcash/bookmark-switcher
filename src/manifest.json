@@ -34,10 +34,15 @@
       "48": "icons/48.png"
     }
   },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
   "commands": {
     "next_bar": {
       "suggested_key": {
-        "default": "Alt+Space"
+        "mac": "Alt+Space",
+        "default": "Ctrl+Space"
       },
       "description": "Switch bookmark toolbars"
     }

@@ -6,8 +6,8 @@ module.exports = {
     'vue/setup-compiler-macros': true,
   },
   extends: [
-    'plugin:vue/vue3-essential',
-    '@vue/standard',
+    'eslint:recommended',
+    'plugin:vue/vue3-recommended',
   ],
   parserOptions: {
     parser: 'babel-eslint',

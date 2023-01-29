@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 import { useBookmarkBars } from '@/composables/useBookmarks'
 import { updatePopupIcon } from '@/composables/usePopupIcon'
+import { NEXT_BAR_COMMAND_NAME } from '@/constants'
 
 let switchToNextBar = () => { console.warn('Running action before the state is loaded!') }
 let switchToBar = () => { console.warn('Running action before the state is loaded!') }
@@ -29,7 +30,7 @@ browser.runtime.onMessage.addListener(({ currentBarId }) => {
 
 browser.commands.onCommand.addListener(function (command) {
   switch (command) {
-    case 'next_bar':
+    case NEXT_BAR_COMMAND_NAME:
       switchToNextBar()
       break
     default:
