@@ -1,16 +1,24 @@
 import { ref, reactive, readonly, watch, computed } from 'vue'
 import _throttle from 'lodash.throttle'
 import { useBrowserStorage } from './useBrowserStorage'
-import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR } from '../constants'
+import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '../constants'
 import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildrens, createBookmarkFolder } from '../bookmarkHelper'
 
 const switcherFolderPromise = searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 
 export async function useBookmarkBars () {
   const { useBrowserStorageKey, resetStorage } = useBrowserStorage()
-  const currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
+  const syncCurrentBar = await useBrowserStorageKey(OPTION_KEY_SYNC_BAR, true)
   const barIcons = await useBrowserStorageKey('barIcons')
   const excludedBookmarkIds = await useBrowserStorageKey('pinnedBookmarks')
+
+  let currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR);
+  if (!syncCurrentBar.value) {
+    const { useBrowserStorageKey: useLocalBrowserStorageKey } = useBrowserStorage(false)
+    currentBookmarkFolderId = await useLocalBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
+  } else {
+    currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
+  }
 
   // Loads main wrapper folder for bookmark bars
   const switcherFolder = await switcherFolderPromise.then((folder) => {
@@ -25,7 +33,6 @@ export async function useBookmarkBars () {
   browser.bookmarks.onCreated.addListener((newBookmarkId, bookmarkInfos) => {
     if (bookmarkInfos.type === 'folder' && bookmarkInfos.parentId === switcherFolder.id && bars.value.every(bar => bar.id !== newBookmarkId)) {
       useBookmarkFolder(barIcons, excludedBookmarkIds)(bookmarkInfos, undefined).then(newFolder => {
-        console.log('ADDED BOOKMARK FOLDER')
         bars.value.push(newFolder)
       })
     }
@@ -33,7 +40,6 @@ export async function useBookmarkBars () {
 
   browser.bookmarks.onRemoved.addListener((deletedBookmarkId, removeInfos) => {
     if (removeInfos.parentId === switcherFolder.id) {
-      console.log('DEKETED BOOKMARK FOLDER')
       deleteBar(deletedBookmarkId)
     }
   })

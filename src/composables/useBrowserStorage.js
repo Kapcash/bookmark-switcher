@@ -15,7 +15,7 @@ export function useBrowserStorage (sync = true) {
     })
   }
 
-  async function useBrowserStorageKey (key) {
+  async function useBrowserStorageKey (key, defaultValue) {
     if (!(key in state)) {
       const initialStoredValue = await getKey(key, storage)
       console.debug('Loading storage value', `${key}:`, initialStoredValue)
@@ -25,6 +25,10 @@ export function useBrowserStorage (sync = true) {
         console.debug('Ref updated!', `${key}:`, oldValue, '->', newValue)
         setKey(key, newValue, storage)
       })
+
+      if (initialStoredValue === undefined && !!defaultValue) {
+        state[key] = defaultValue
+      }
     }
     return toRef(state, key)
   }

@@ -10,5 +10,7 @@ export const NEXT_BAR_COMMAND_NAME = 'next_bar'
 /** Storage keys */
 export const STORAGE_CURRENT_TOOLBAR_ATTR = 'currentToolbar'
 export const STORAGE_EXCLUDED_BOOKMARK_ATTR = 'excludedBookmarks'
+export const OPTION_KEY_SYNC_BAR = 'optionSyncCurrentBar'
 
 export const EMOJI_API_KEY = '6c792eaeefc25ec25414405f3d1c30d1fd0516f9'
+

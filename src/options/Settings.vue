@@ -2,7 +2,7 @@
   <div>
     <h2>{{ i18n.updateHotkeys }}</h2>
 
-    <div class="shortcut-form">
+    <section class="shortcut-form">
       <ShortcutInput
         v-model="hotkeys"
         class="shortcut-input"
@@ -25,18 +25,37 @@
         </button>
         <span :class="color">{{ msg }}</span>
       </div>
-    </div>
+    </section>
+
+    <section>
+      <input
+        id="syncCurrentBar"
+        v-model="syncCurrentBar"
+        type="checkbox"
+      >
+      <label for="syncCurrentBar">
+        {{ syncCurrentBar ? i18n.syncCurrentBar : i18n.unsyncCurrentBar }}
+      </label>
+    </section>
   </div>
 </template>
 
 <script>
 import ShortcutInput from '@/components/ShortcutInput.vue';
 import KeyState from '@/components/KeyState.vue';
-import { NEXT_BAR_COMMAND_NAME } from '@/constants'
+import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/constants'
+import { useBrowserStorage } from '@/composables/useBrowserStorage'
 
 export default {
   name: 'Settings',
   components: { ShortcutInput, KeyState },
+  async setup () {
+    const { useBrowserStorageKey } = useBrowserStorage()
+    const syncCurrentBar = await useBrowserStorageKey(OPTION_KEY_SYNC_BAR, true)
+    return {
+      syncCurrentBar,
+    }
+  },
   data () {
     return {
       hotkeys: [],
@@ -99,6 +118,9 @@ body {
 </style>
 
 <style scoped>
+section {
+  margin-bottom: 16px;
+}
 .shortcut-form {
   display: flex;
   gap: 24px;
