@@ -34,7 +34,7 @@
         type="checkbox"
       >
       <label for="syncCurrentBar">
-        {{ syncCurrentBar ? i18n.syncCurrentBar : i18n.unsyncCurrentBar }}
+        {{ i18n.syncCurrentBar }}
       </label>
     </section>
   </div>

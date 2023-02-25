@@ -106,9 +106,5 @@
   "syncCurrentBar": {
     "message": "Sincronizar el perfil actual entre dispositivos",
     "description": "Input label for syncing current bar"
-  },
-  "unsyncCurrentBar": {
-    "message": "No sincronizar el perfil actual entre dispositivos",
-    "description": "Input label for not syncing current bar"
   }
 }
