@@ -1,4 +1,10 @@
 
+## 2.1.0
+
+- Add the preferences page for the extension
+  - Possibility to update the extension shortcut directly from here
+  - Can disable the synchronisation of the currently used profile between devices (enabled by default)
+
 ## 2.0.5
 
 - Allow to switch to new bar just after creating it without needing to close the browser
