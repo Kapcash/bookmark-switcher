@@ -12,7 +12,7 @@ export async function useBookmarkBars () {
   const barIcons = await useBrowserStorageKey('barIcons')
   const excludedBookmarkIds = await useBrowserStorageKey('pinnedBookmarks')
 
-  let currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR);
+  let currentBookmarkFolderId
   if (!syncCurrentBar.value) {
     const { useBrowserStorageKey: useLocalBrowserStorageKey } = useBrowserStorage(false)
     currentBookmarkFolderId = await useLocalBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)

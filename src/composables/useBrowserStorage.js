@@ -22,11 +22,12 @@ export function useBrowserStorage (sync = true) {
       state[key] = initialStoredValue
 
       watch(() => state[key], (newValue, oldValue) => {
+        if (newValue === undefined) { state[key] = null }
         console.debug('Ref updated!', `${key}:`, oldValue, '->', newValue)
         setKey(key, newValue, storage)
       })
 
-      if (initialStoredValue === undefined && !!defaultValue) {
+      if (initialStoredValue == undefined && !!defaultValue) {
         state[key] = defaultValue
       }
     }
