@@ -1,8 +1,8 @@
 import { ref, reactive, readonly, watch, computed } from 'vue'
 import _throttle from 'lodash.throttle'
 import { useBrowserStorage } from './useBrowserStorage'
-import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '@/constants'
-import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildrens, createBookmarkFolder } from '../bookmarkHelper'
+import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
+import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildrens, createBookmarkFolder } from './bookmarkHelper'
 
 const switcherFolderPromise = searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 
