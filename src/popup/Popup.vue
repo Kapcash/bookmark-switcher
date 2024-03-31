@@ -1,5 +1,5 @@
 <template>
-  <Suspense >
+  <Suspense>
     <RouteWrapper />
     <template #fallback>
       Loading popup...
@@ -8,18 +8,9 @@
   <DevOnly v-if="isDev" />
 </template>
 
-<script>
+<script setup>
 import RouteWrapper from './RouteWrapper.vue'
 import DevOnly from '@/components/DevOnly.vue'
 
-export default {
-  name: 'Popup',
-  components: { RouteWrapper, DevOnly },
-  setup () {
-    const isDev = process.env.NODE_ENV !== 'production'
-    return {
-      isDev,
-    }
-  },
-}
+const isDev = process.env.NODE_ENV !== 'production'
 </script>

@@ -2,12 +2,12 @@
 
 A Browser extension to switch between several bookmark toolbars.
 
-**I WILL NOT BE RESPONSIBLE IF YOU LOOSE ANY OF YOUR BOOKMARK**  
+**I WILL NOT BE RESPONSIBLE IF YOU LOOSE ANY OF YOUR BOOKMARK**
 Please consider making a backup before installing this add-on.
 
 ## How it works
 
-Just click the new extension icon to open the popup.  
+Just click the new extension icon to open the popup.
 It will give a default name to your current bookmark bar.
 
 Then, you can add additional bars and rename them.

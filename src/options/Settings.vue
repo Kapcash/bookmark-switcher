@@ -43,7 +43,7 @@
 <script>
 import ShortcutInput from '@/components/ShortcutInput.vue';
 import KeyState from '@/components/KeyState.vue';
-import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/constants'
+import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
 import { useBrowserStorage } from '@/composables/useBrowserStorage'
 
 export default {
