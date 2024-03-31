@@ -53,7 +53,11 @@ export default {
   },
   emits: ['update:modelValue', 'back'],
   async setup (props, ctx) {
-    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`).then(res => res.json()).catch(() => [])
+    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`).then(res => res.json()).catch((err) => {
+      console.error("failed to fetch emoji list", err)
+      return []
+    })
+    console.log("emojiList.length",emojiList.length)
     const selectedEmoji = computed({
       get () {
         return props.modelValue
@@ -66,7 +70,7 @@ export default {
     const filter = ref('')
 
     const emojiListFiltered = computed(() => {
-      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value) && !emoji.unicodeName.match(/^E\d+\.\d.*/))
+      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value))
     })
 
     return {
