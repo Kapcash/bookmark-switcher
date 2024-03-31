@@ -1,3 +1,10 @@
+<script setup>
+import RouteWrapper from './RouteWrapper.vue'
+import DevOnly from '@/components/DevOnly.vue'
+
+const isDev = import.meta.env.NODE_ENV !== 'production'
+</script>
+
 <template>
   <Suspense>
     <RouteWrapper />
@@ -7,10 +14,3 @@
   </Suspense>
   <DevOnly v-if="isDev" />
 </template>
-
-<script setup>
-import RouteWrapper from './RouteWrapper.vue'
-import DevOnly from '@/components/DevOnly.vue'
-
-const isDev = process.env.NODE_ENV !== 'production'
-</script>
