@@ -1,5 +1,6 @@
 import { reactive, toRef, watch } from 'vue'
 import _isEqual from 'lodash.isequal'
+import { isFirefox } from '~/env'
 
 // Global shared state
 const state = reactive({})
@@ -34,7 +35,7 @@ export function useBrowserStorage(sync = true) {
   }
 
   // Watch changes on store and update ref
-  const storageParent = import.meta.env.VUE_APP_IS_CHROME === 'true' ? chrome.storage : browser.storage
+  const storageParent = !isFirefox ? chrome.storage : browser.storage
   storageParent.onChanged.addListener((storedState) => {
     const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
     const serializeStoredValue = val => !!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0) ? Object.values(val) : val
@@ -57,7 +58,7 @@ export function useBrowserStorage(sync = true) {
 /** Return the storage object, depends on the current browser */
 function getStorage(sync = true) {
   const storageKey = sync ? 'sync' : 'local'
-  if (import.meta.env.VUE_APP_IS_CHROME === 'true')
+  if (!isFirefox)
     return chrome.storage[storageKey]
   else
     return browser.storage[storageKey]
@@ -66,7 +67,7 @@ function getStorage(sync = true) {
 /** Async! Get a stored value from a given key */
 function getKey(key, storage) {
   let storagePromise
-  if (import.meta.env.VUE_APP_IS_CHROME === 'true')
+  if (!isFirefox)
     storagePromise = chromeAsync(cb => storage.get(key, cb))
   else
     storagePromise = storage.get(key)
@@ -78,14 +79,14 @@ function getKey(key, storage) {
 
 /** Async! Store a new value with the given key */
 function setKey(key, value, storage) {
-  if (import.meta.env.VUE_APP_IS_CHROME === 'true')
+  if (!isFirefox)
     return chromeAsync(cb => storage.set({ [key]: value, cb }))
   else
     return storage.set({ [key]: value })
 }
 
 function clear(storage) {
-  if (import.meta.env.VUE_APP_IS_CHROME === 'true')
+  if (!isFirefox)
     return chromeAsync(cb => storage.clear(cb))
   else
     return storage.clear()

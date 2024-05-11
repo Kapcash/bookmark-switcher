@@ -1,3 +1,5 @@
+import browser from 'webextension-polyfill'
+
 /** Get bookmark (folder or not) by title
  * @param {string} title The bookmark title to search for
 */

@@ -28,7 +28,7 @@ useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => 
     currentBar.value = targetBar || null
   }
 
-  updatePopupIcon(computed(() => currentBar.value?.icon))
+  // updatePopupIcon(computed(() => currentBar.value?.icon))
 })
 
 browser.runtime.onMessage.addListener(({ currentBarId }) => {
@@ -37,7 +37,7 @@ browser.runtime.onMessage.addListener(({ currentBarId }) => {
   }
 })
 
-browser.commands.onCommand.addListener(function (command) {
+browser.commands.onCommand.addListener((command) => {
   switch (command) {
     case NEXT_BAR_COMMAND_NAME:
       switchToNextBar()
@@ -46,7 +46,6 @@ browser.commands.onCommand.addListener(function (command) {
       break
   }
 })
-
 
 browser.runtime.onInstalled.addListener(() => {
   // eslint-disable-next-line no-console

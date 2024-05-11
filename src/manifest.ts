@@ -14,12 +14,14 @@ export async function getManifest() {
     version: pkg.version,
     description: pkg.description,
     action: {
-      default_icon: './assets/icon-512.png',
+      default_icon: './assets/bookmark-switcher-logo-plain.png',
       default_popup: './dist/popup/index.html',
+      default_title: 'Switch bookmark bar',
     },
     options_ui: {
       page: './dist/options/index.html',
       open_in_tab: true,
+      browser_style: true,
     },
     background: isFirefox
       ? {
@@ -30,31 +32,40 @@ export async function getManifest() {
           service_worker: './dist/background/index.mjs',
         },
     icons: {
-      16: './assets/icon-512.png',
-      48: './assets/icon-512.png',
-      128: './assets/icon-512.png',
+      16: './assets/icons/bookmark-switcher-logo-plain-16.png',
+      32: './assets/icons/bookmark-switcher-logo-plain-32.png',
+      64: './assets/icons/bookmark-switcher-logo-plain-64.png',
     },
     permissions: [
       'bookmarks',
       'storage',
     ],
+    commands: {
+      next_bar: {
+        suggested_key: {
+          mac: 'Alt+Space',
+          default: 'Ctrl+Space',
+        },
+        description: 'Switch bookmark toolbars',
+      },
+    },
     host_permissions: ['*://*/*'],
-    content_scripts: [
-      {
-        matches: [
-          '<all_urls>',
-        ],
-        js: [
-          'dist/contentScripts/index.global.js',
-        ],
-      },
-    ],
-    web_accessible_resources: [
-      {
-        resources: ['dist/contentScripts/style.css'],
-        matches: ['<all_urls>'],
-      },
-    ],
+    // content_scripts: [
+    //   {
+    //     matches: [
+    //       '<all_urls>',
+    //     ],
+    //     js: [
+    //       'dist/contentScripts/index.global.js',
+    //     ],
+    //   },
+    // ],
+    // web_accessible_resources: [
+    //   {
+    //     resources: ['dist/contentScripts/style.css'],
+    //     matches: ['<all_urls>'],
+    //   },
+    // ],
     content_security_policy: {
       extension_pages: isDev
         // this is required on dev for Vite script to load

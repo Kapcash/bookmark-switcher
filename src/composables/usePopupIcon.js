@@ -8,7 +8,7 @@ export function updatePopupIcon (emojiRef) {
 }
 
 function updateActionIcon (emoji) {
-  const isDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const isDarkTheme = (typeof window !== 'undefined') ? window.matchMedia('(prefers-color-scheme: dark)').matches : false
 
   function getImageData (size = 64) {
     const canvas = document.createElement('canvas')
@@ -16,9 +16,9 @@ function updateActionIcon (emoji) {
     const baseImage = new Image()
 
     if (isDarkTheme) {
-      baseImage.src = require(`../assets/icons/bookmark-switcher-logo-stroke-${size}.png`)
+      baseImage.src = import(`../assets/icons/bookmark-switcher-logo-stroke-${size}.png`)
     } else {
-      baseImage.src = require(`../assets/icons/bookmark-switcher-logo-plain-${size}.png`)
+      baseImage.src = import(`../assets/icons/bookmark-switcher-logo-plain-${size}.png`)
     }
 
     return new Promise((resolve) => {

@@ -16,6 +16,7 @@
     "dev:background": "npm run build:background -- --mode development",
     "dev:web": "vite",
     "build": "cross-env NODE_ENV=production run-s clear build:web build:prepare build:background",
+    "build-firefox": "cross-env EXTENSION=firefox run-s clear build:web build:prepare build:background",
     "build:prepare": "esno scripts/prepare.ts",
     "build:background": "vite build --config vite.config.background.mts",
     "build:web": "vite build",
@@ -66,7 +67,7 @@
     "vue-demi": "^0.14.7",
     "web-ext": "^7.11.0",
     "webext-bridge": "^6.0.1",
-    "webextension-polyfill": "^0.10.0"
+    "webextension-polyfill": "^0.11.0"
   },
   "dependencies": {
     "lodash.isequal": "^4.5.0",
