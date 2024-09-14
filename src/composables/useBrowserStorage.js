@@ -1,6 +1,7 @@
 import { reactive, toRef, watch } from 'vue'
 import _isEqual from 'lodash.isequal'
 import { isFirefox } from '~/env'
+import browser from 'webextension-polyfill'
 
 // Global shared state
 const state = reactive({})
@@ -58,19 +59,12 @@ export function useBrowserStorage(sync = true) {
 /** Return the storage object, depends on the current browser */
 function getStorage(sync = true) {
   const storageKey = sync ? 'sync' : 'local'
-  if (!isFirefox)
-    return chrome.storage[storageKey]
-  else
-    return browser.storage[storageKey]
+  return browser.storage[storageKey]
 }
 
 /** Async! Get a stored value from a given key */
 function getKey(key, storage) {
-  let storagePromise
-  if (!isFirefox)
-    storagePromise = chromeAsync(cb => storage.get(key, cb))
-  else
-    storagePromise = storage.get(key)
+  let storagePromise = storage.get(key)
 
   return storagePromise.then((storage) => {
     return storage[key]
@@ -79,27 +73,9 @@ function getKey(key, storage) {
 
 /** Async! Store a new value with the given key */
 function setKey(key, value, storage) {
-  if (!isFirefox)
-    return chromeAsync(cb => storage.set({ [key]: value, cb }))
-  else
-    return storage.set({ [key]: value })
+  return storage.set({ [key]: value })
 }
 
 function clear(storage) {
-  if (!isFirefox)
-    return chromeAsync(cb => storage.clear(cb))
-  else
-    return storage.clear()
-}
-
-/** Simulates async behaviour for storage functions on chrome */
-function chromeAsync(responseCb) {
-  return new Promise((resolve, reject) => {
-    responseCb((res) => {
-      if (chrome.runtime.lastError)
-        return reject(chrome.runtime.lastError)
-
-      return resolve(res)
-    })
-  })
+  return storage.clear()
 }
