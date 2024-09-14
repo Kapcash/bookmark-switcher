@@ -1,6 +1,5 @@
 import { reactive, toRef, watch } from 'vue'
 import _isEqual from 'lodash.isequal'
-import { isFirefox } from '~/env'
 import browser from 'webextension-polyfill'
 
 // Global shared state
@@ -36,8 +35,7 @@ export function useBrowserStorage(sync = true) {
   }
 
   // Watch changes on store and update ref
-  const storageParent = !isFirefox ? chrome.storage : browser.storage
-  storageParent.onChanged.addListener((storedState) => {
+  browser.storage.onChanged.addListener((storedState) => {
     const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
     const serializeStoredValue = val => !!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0) ? Object.values(val) : val
 

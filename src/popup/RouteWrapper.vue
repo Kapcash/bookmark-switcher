@@ -22,6 +22,7 @@ import EmojiPicker from '@/components/EmojiPicker.vue'
 import { useBookmarkBars } from '@/composables/useBookmarks'
 import { useBrowserStorage } from '@/composables/useBrowserStorage'
 import { updatePopupIcon } from '@/composables/usePopupIcon'
+import browser from 'webextension-polyfill'
 
 export default {
   name: 'Popup',

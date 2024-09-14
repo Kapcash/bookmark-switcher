@@ -1,4 +1,5 @@
 import { watch } from 'vue'
+import browser from 'webextension-polyfill'
 
 export function updatePopupIcon (emojiRef) {
   updateActionIcon(emojiRef.value)

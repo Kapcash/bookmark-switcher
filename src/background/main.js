@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useBookmarkBars } from '@/composables/useBookmarks'
 import { updatePopupIcon } from '@/composables/usePopupIcon'
 import { NEXT_BAR_COMMAND_NAME } from '@/logic/constants'
+import browser from 'webextension-polyfill'
 
 // only on dev mode
 if (import.meta.hot) {
