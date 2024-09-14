@@ -1,11 +1,11 @@
 {
   "name": "bookmark-switcher-vue",
   "displayName": "Bookmark Switcher",
-  "description": "",
+  "type": "module",
   "version": "3.0.0",
   "private": true,
   "packageManager": "pnpm@8.15.4",
-  "type": "module",
+  "description": "",
   "repository": {
     "url": "https://github.com/Kapcash/bookmark-switcher"
   },
@@ -32,6 +32,10 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0",
+    "lodash.throttle": "^4.1.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.1",
     "@ffflorian/jszip-cli": "^3.6.2",
@@ -39,7 +43,7 @@
     "@playwright/test": "^1.42.1",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.26",
-    "@types/webextension-polyfill": "^0.10.7",
+    "@types/webextension-polyfill": "^0.12.1",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@unocss/reset": "^0.58.5",
     "@vitejs/plugin-vue": "^5.0.4",
@@ -67,10 +71,6 @@
     "vue-demi": "^0.14.7",
     "web-ext": "^7.11.0",
     "webext-bridge": "^6.0.1",
-    "webextension-polyfill": "^0.11.0"
-  },
-  "dependencies": {
-    "lodash.isequal": "^4.5.0",
-    "lodash.throttle": "^4.1.1"
+    "webextension-polyfill": "^0.12.0"
   }
 }
