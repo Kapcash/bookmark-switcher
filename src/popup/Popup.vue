@@ -14,3 +14,14 @@ const isDev = import.meta.env.NODE_ENV !== 'production'
   </Suspense>
   <DevOnly v-if="isDev" />
 </template>
+
+<style>
+#app section + section {
+  border-top: 1px solid #222;
+  padding-top: 1px;
+  margin-top: 1px;
+}
+#app input {
+  padding-left: 10px;
+}
+</style>

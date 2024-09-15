@@ -1,6 +1,6 @@
 <template>
   <div
-    class="key-card"
+    class="key-card relative"
     :class="[
       active ? 'bg-active' : 'bg-inactive',
       empty ? 'color-placeholder' : 'color-grey',
@@ -45,12 +45,11 @@ defineProps({
   text-align: center;
   padding: 8px;
   border-radius: 4px;
-  position: relative;
 }
 .key-card.optional::after {
   content: "(" attr(data-i18n) ")";
   position: absolute;
-  bottom: -40%;
+  bottom: -60%;
   left: 0px;
   right: 0px;
   font-size: 0.6rem;
