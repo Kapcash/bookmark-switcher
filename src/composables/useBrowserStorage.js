@@ -19,17 +19,19 @@ export function useBrowserStorage(sync = true) {
     if (!(key in state)) {
       const initialStoredValue = await getKey(key, storage)
       console.debug('Loading storage value', `${key}:`, initialStoredValue)
-      state[key] = initialStoredValue
+      state[key] = initialStoredValue ?? null
+
+      if (initialStoredValue == undefined && !!defaultValue) {
+        state[key] = defaultValue
+      }
 
       watch(() => state[key], (newValue, oldValue) => {
-        if (newValue === undefined)
+        if (newValue === undefined) {
           state[key] = null
+        }
         console.debug('Ref updated!', `${key}:`, oldValue, '->', newValue)
         setKey(key, newValue, storage)
       })
-
-      if (initialStoredValue == undefined && !!defaultValue)
-        state[key] = defaultValue
     }
     return toRef(state, key)
   }
@@ -37,7 +39,7 @@ export function useBrowserStorage(sync = true) {
   // Watch changes on store and update ref
   browser.storage.onChanged.addListener((storedState) => {
     const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
-    const serializeStoredValue = val => !!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0) ? Object.values(val) : val
+    const serializeStoredValue = val => (!!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0)) ? Object.values(val) : val
 
     Object.entries(storedState)
       .map(([key, { newValue, oldValue }]) => [key, { newValue: serializeStoredValue(newValue), oldValue: serializeStoredValue(oldValue) }])

@@ -62,7 +62,7 @@ export async function useBookmarkBars () {
   }
 
   async function createAnonymousCurrentBarFolder () {
-    const anonymousName = browser.i18n.getMessage('defaultBarName')
+    const anonymousName = browser.i18n.getMessage('defaultBarName') || '🔖'
     currentBar.value = await createBar(anonymousName)
   }
 

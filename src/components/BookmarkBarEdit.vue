@@ -43,8 +43,6 @@ export default {
     return {
       barName,
       bookmarkNameInput,
-      cancelTooltip: browser.i18n.getMessage('cancel'),
-      updateBtn: browser.i18n.getMessage('update'),
     }
   },
 }

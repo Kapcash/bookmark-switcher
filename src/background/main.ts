@@ -1,7 +1,5 @@
 import { onMessage, sendMessage } from 'webext-bridge/background'
-import { computed } from 'vue'
 import { useBookmarkBars } from '@/composables/useBookmarks'
-import { updatePopupIcon } from '@/composables/usePopupIcon'
 import { NEXT_BAR_COMMAND_NAME } from '@/logic/constants'
 import browser from 'webextension-polyfill'
 
@@ -73,8 +71,7 @@ browser.tabs.onActivated.addListener(async ({ tabId }) => {
     return
   }
 
-  // eslint-disable-next-line no-console
-  console.log('previous tab', tab)
+  console.debug('previous tab', tab)
   sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
 })
 

@@ -13,6 +13,7 @@ export async function getManifest() {
     name: pkg.displayName || pkg.name,
     version: pkg.version,
     description: pkg.description,
+    default_locale: 'en',
     action: {
       default_icon: './assets/bookmark-switcher-logo-plain.png',
       default_popup: './dist/popup/index.html',
