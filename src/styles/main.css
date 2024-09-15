@@ -29,73 +29,74 @@ body #app {
   min-width: 240px;
 }
 
-svg {
+#app svg {
   fill: currentColor;
 }
 
-.row {
+#app .row {
   display: flex;
   justify-content: flex-end;
   height: 32px;
 }
-.row button {
+#app .row button {
   height: 100%
 }
 
-.flex {
-  flex: 1 0 auto;
-}
-.flex-0 {
+#app .flex-0 {
   flex: 0;
 }
-.align-baseline {
+#app .align-baseline {
   align-items: baseline;
 }
 
-ul.undecorate {
+#app  ul.undecorate {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-input {
+#app  input {
   padding-left: 10px;
 }
-button, input {
+/* #app button {
+  padding: 1px 6px;
+} */
+
+#app button, #app input {
   background-color: #222;
   color: white;
   border: 1px solid #444;
   outline: none;
 }
-button:disabled {
+#app button:disabled {
   color: #555;
 }
-button:enabled {
+#app button:enabled {
   cursor: pointer;
 }
-button:not(.btn-icon):enabled:hover {
+#app button:not(.btn-icon):enabled:hover {
   background-color: #333;
 }
-button:focus {
+#app button:focus {
   outline: 1px #9bb9df solid;
   outline-offset: -1px;
 }
-button.btn-icon {
+#app button.btn-icon {
   display: grid;
   place-content: center;
   padding: 0 5px;
 }
-button.btn-icon:enabled:hover {
+#app button.btn-icon:enabled:hover {
   color: lightblue;
 }
-button.btn-icon.error:enabled:hover {
+#app button.btn-icon.error:enabled:hover {
   color: #be3232;
 }
-button.btn-icon.success:enabled:hover {
+#app button.btn-icon.success:enabled:hover {
   color: #7db053;
 }
 
-section + section {
+#app section + section {
   border-top: 1px solid #222;
   padding-top: 1px;
   margin-top: 1px;

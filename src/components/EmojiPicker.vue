@@ -24,7 +24,7 @@
       <input
         v-model="filter"
         :placeholder="i18n.emojiFilter"
-        class="flex"
+        class="flex-auto"
       >
     </div>
 
@@ -72,7 +72,13 @@ export default {
   },
   emits: ['update:modelValue', 'back'],
   async setup (props, ctx) {
-    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`).then(res => res.json()).catch(() => [])
+    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`).then(res => res.json()).catch((err) => {
+      console.error("Can't fetch emoji list", err)
+      return []
+    })
+
+    console.log("emojiList", emojiList.length)
+
     const selectedEmoji = computed({
       get () {
         return props.modelValue
@@ -85,8 +91,11 @@ export default {
     const filter = ref('')
 
     const emojiListFiltered = computed(() => {
-      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value) && !emoji.unicodeName.match(/^E\d+\.\d.*/))
+      console.log("COMPUTED", emojiList.length)
+      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value))
     })
+
+    console.log("emojiListFiltered", emojiListFiltered.length)
 
     return {
       filter,
