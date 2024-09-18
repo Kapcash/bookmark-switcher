@@ -1,5 +1,12 @@
+<script setup>
+import RouteWrapper from './RouteWrapper.vue'
+import DevOnly from '@/components/DevOnly.vue'
+
+const isDev = process.env.NODE_ENV !== 'production'
+</script>
+
 <template>
-  <Suspense >
+  <Suspense>
     <RouteWrapper />
     <template #fallback>
       Loading popup...
@@ -8,18 +15,13 @@
   <DevOnly v-if="isDev" />
 </template>
 
-<script>
-import RouteWrapper from './RouteWrapper.vue'
-import DevOnly from '@/components/DevOnly.vue'
-
-export default {
-  name: 'Popup',
-  components: { RouteWrapper, DevOnly },
-  setup () {
-    const isDev = process.env.NODE_ENV !== 'production'
-    return {
-      isDev,
-    }
-  },
+<style>
+#app section + section {
+  border-top: 1px solid #222;
+  padding-top: 1px;
+  margin-top: 1px;
 }
-</script>
+#app input {
+  padding-left: 10px;
+}
+</style>

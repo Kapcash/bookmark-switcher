@@ -2,7 +2,7 @@
   <div>
     <section>
       <ul class="list">
-        <li v-for="bar in bookmarkBars" :key="bar.id" >
+        <li v-for="bar in bookmarkBars" :key="bar.id">
           <BookmarkBarView
             :name="[bar.icon, bar.title].filter(Boolean).join(' ')"
             :disabled="bar.id === currentBarId"

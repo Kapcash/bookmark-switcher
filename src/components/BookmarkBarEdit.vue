@@ -9,6 +9,8 @@
 
 <script>
 import { ref, onMounted, computed } from 'vue'
+import browser from 'webextension-polyfill'
+
 export default {
   name: 'BookmarkBarEdit',
   props: {
@@ -41,8 +43,6 @@ export default {
     return {
       barName,
       bookmarkNameInput,
-      cancelTooltip: browser.i18n.getMessage('cancel'),
-      updateBtn: browser.i18n.getMessage('update'),
     }
   },
 }

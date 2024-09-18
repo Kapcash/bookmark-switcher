@@ -1,0 +1,97 @@
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+}
+
+.btn {
+  @apply px-4 py-1 rounded inline-block
+    bg-teal-600 text-white cursor-pointer
+    hover:bg-teal-700
+    disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50;
+}
+
+.icon-btn {
+  @apply inline-block cursor-pointer select-none
+    opacity-75 transition duration-200 ease-in-out
+    hover:opacity-100 hover:text-teal-600;
+  font-size: 0.9em;
+}
+
+body {
+  background-color: #444444;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+body #app {
+  min-width: 240px;
+}
+
+#app svg {
+  fill: currentColor;
+}
+
+#app .row {
+  display: flex;
+  justify-content: flex-end;
+  height: 32px;
+}
+#app .row button {
+  height: 100%
+}
+
+#app .flex-0 {
+  flex: 0;
+}
+#app .align-baseline {
+  align-items: baseline;
+}
+
+#app  ul.undecorate {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#app input {
+  padding-left: 10px;
+}
+/* #app button {
+  padding: 1px 6px;
+} */
+
+#app button, #app input {
+  background-color: #222;
+  color: white;
+  border: 1px solid #444;
+  outline: none;
+}
+#app button:disabled {
+  color: #555;
+}
+#app button:enabled {
+  cursor: pointer;
+}
+#app button:not(.btn-icon):enabled:hover {
+  background-color: #333;
+}
+#app button:focus {
+  outline: 1px #9bb9df solid;
+  outline-offset: -1px;
+}
+#app button.btn-icon {
+  display: grid;
+  place-content: center;
+  padding: 0 5px;
+}
+#app button.btn-icon:enabled:hover {
+  color: lightblue;
+}
+#app button.btn-icon.error:enabled:hover {
+  color: #be3232;
+}
+#app button.btn-icon.success:enabled:hover {
+  color: #7db053;
+}

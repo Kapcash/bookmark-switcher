@@ -1,8 +1,9 @@
 import { ref, reactive, readonly, watch, computed } from 'vue'
 import _throttle from 'lodash.throttle'
+import browser from 'webextension-polyfill'
 import { useBrowserStorage } from './useBrowserStorage'
-import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '../constants'
-import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildrens, createBookmarkFolder } from '../bookmarkHelper'
+import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
+import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildrens, createBookmarkFolder } from './bookmarkHelper'
 
 const switcherFolderPromise = searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 
@@ -25,13 +26,23 @@ export async function useBookmarkBars () {
     return folder || createBookmarkFolder(TOOLBARS_SWITCHER_NAME)
   })
 
-  const barFolders = await getFolderChildrens(switcherFolder.id).then(folders =>
-    Promise.all(folders.map(folder => useBookmarkFolder(barIcons, excludedBookmarkIds)(folder, folder.id === currentBookmarkFolderId.value ? TOOLBAR_FOLDER_ID : undefined))),
-  )
+  const barFolders = await getFolderChildrens(switcherFolder.id)
+    .then(folders =>
+      Promise.all(folders.map(folder => useBookmarkFolder(barIcons, excludedBookmarkIds)(folder, folder.id === currentBookmarkFolderId.value ? TOOLBAR_FOLDER_ID : undefined))),
+    )
+    .catch(err => {
+      console.error('An error happened while fetching current bars', err)
+      throw err
+    })
+
   const bars = ref(barFolders)
 
   browser.bookmarks.onCreated.addListener((newBookmarkId, bookmarkInfos) => {
-    if (bookmarkInfos.type === 'folder' && bookmarkInfos.parentId === switcherFolder.id && bars.value.every(bar => bar.id !== newBookmarkId)) {
+    const isFolder = bookmarkInfos.type === 'folder' || !('url' in bookmarkInfos)
+    const parentIsSwitcherFolder = bookmarkInfos.parentId === switcherFolder.id
+    const folderNotAlreadyAdded = bars.value.every(bar => bar.id !== newBookmarkId)
+
+    if (isFolder && parentIsSwitcherFolder && folderNotAlreadyAdded) {
       useBookmarkFolder(barIcons, excludedBookmarkIds)(bookmarkInfos, undefined).then(newFolder => {
         bars.value.push(newFolder)
       })
@@ -51,7 +62,7 @@ export async function useBookmarkBars () {
   }
 
   async function createAnonymousCurrentBarFolder () {
-    const anonymousName = browser.i18n.getMessage('defaultBarName')
+    const anonymousName = browser.i18n.getMessage('defaultBarName') || '🔖'
     currentBar.value = await createBar(anonymousName)
   }
 
@@ -68,7 +79,7 @@ export async function useBookmarkBars () {
     return createBookmarkFolder(barName, switcherFolder.id)
       .then(useBookmarkFolder(barIcons, excludedBookmarkIds))
       .catch(err => {
-        console.err('An error occurred while creating a new bar', err)
+        console.error('An error occurred while creating a new bar', err)
       })
   }
 
@@ -124,6 +135,10 @@ const useBookmarkFolder = (storedIcons, excludedBookmarkIds) => async (bookmarkF
       ...children,
       pinned: computed(() => excludedBookmarkIds.value?.some(excludedId => excludedId === children.id)),
     })))
+    .catch(err => {
+      console.error("Error while fetching childrens", err)
+      throw err
+    })
   const bar = reactive({
     ...bookmarkFolder,
     bookmarks: readonly(childrenBookmarks),

@@ -1,39 +1,41 @@
 <template>
-  <div>
-    <h2>{{ i18n.updateHotkeys }}</h2>
+  <div class="p-6">
+    <section v-if="updateCommandSupported">
+      <h2 class="mb-3">{{ i18n.updateHotkeys }}</h2>
 
-    <section class="shortcut-form">
-      <ShortcutInput
-        v-model="hotkeys"
-        class="shortcut-input"
-      />
-
-      <div class="column">
-        <div class="current-shortcut">
-          {{ i18n.currentHotkey }}
-          <KeyState class="hotkey">
-            {{ currentHotkeyString }}
-          </KeyState>
+      <div class="shortcut-form">
+        <ShortcutInput
+          v-model="hotkeys"
+          class="shortcut-input"
+        />
+  
+        <div class="column">
+          <div class="current-shortcut">
+            {{ i18n.currentHotkey }}
+            <KeyState class="hotkey">
+              {{ currentHotkeyString }}
+            </KeyState>
+          </div>
+  
+          <button
+            class="save"
+            :disabled="!changedShortcut"
+            @click="updateShortcut"
+          >
+            {{ i18n.savePreferences }}
+          </button>
+          <span :class="color">{{ msg }}</span>
         </div>
-
-        <button
-          class="save"
-          :disabled="!changedShortcut"
-          @click="updateShortcut"
-        >
-          {{ i18n.savePreferences }}
-        </button>
-        <span :class="color">{{ msg }}</span>
       </div>
     </section>
 
-    <section>
+    <section class="pt-3">
       <input
         id="syncCurrentBar"
         v-model="syncCurrentBar"
         type="checkbox"
       >
-      <label for="syncCurrentBar">
+      <label for="syncCurrentBar" class="px-3">
         {{ i18n.syncCurrentBar }}
       </label>
     </section>
@@ -43,8 +45,9 @@
 <script>
 import ShortcutInput from '@/components/ShortcutInput.vue';
 import KeyState from '@/components/KeyState.vue';
-import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/constants'
+import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
 import { useBrowserStorage } from '@/composables/useBrowserStorage'
+import browser from 'webextension-polyfill'
 
 export default {
   name: 'Settings',
@@ -62,11 +65,12 @@ export default {
       msg: '',
       changedShortcut: false,
       color: '',
+      updateCommandSupported: !!browser.commands.update,
     }
   },
   computed: {
     currentHotkeyString() {
-      return this.hotkeys.map(key => key[0].toUpperCase() + key.slice(1)).join(' + ')
+      return this.hotkeys.map(key => key[0]?.toUpperCase() + key.slice(1)).join(' + ')
     },
   },
   watch: {
@@ -108,6 +112,7 @@ export default {
 body {
   background: #ffffff;
   min-height: 280px;
+  max-width: 450px;
 }
 @media (prefers-color-scheme: dark) {
   body {
