@@ -2,7 +2,7 @@
 import RouteWrapper from './RouteWrapper.vue'
 import DevOnly from '@/components/DevOnly.vue'
 
-const isDev = import.meta.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production'
 </script>
 
 <template>

@@ -10,7 +10,7 @@ import { useBrowserStorage } from '@/composables/useBrowserStorage'
 export default {
   name: 'DevOnly',
   setup () {
-    const isDev = import.meta.env.NODE_ENV !== 'production'
+    const isDev = process.env.NODE_ENV !== 'production'
 
     function clear () {
       if (isDev) {
