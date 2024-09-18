@@ -92,7 +92,7 @@
     "description": "Label for hotkeys preference"
   },
   "focusMe": {
-    "message": "Enfócame para capturar las llaves",
+    "message": "Pinchar aquí para configurar las llaves",
     "description": "User hint for capturing keys"
   },
   "optional": {
@@ -100,7 +100,7 @@
     "description": "Optional text"
   },
   "currentHotkey": {
-    "message": "Atajo de teclado elegido:",
+    "message": "Atajo de teclado seleccionado:",
     "description": "Label for current hotkeys"
   },
   "syncCurrentBar": {

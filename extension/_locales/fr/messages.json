@@ -92,7 +92,7 @@
     "description": "Label for hotkeys preference"
   },
   "focusMe": {
-    "message": "Cliquez par ici pour capturer les touches",
+    "message": "Cliquez ici pour changer le raccourci",
     "description": "User hint for capturing keys"
   },
   "optional": {
@@ -100,7 +100,7 @@
     "description": "Optional text"
   },
   "currentHotkey": {
-    "message": "Raccourci choisi :",
+    "message": "Raccourci sélectionné :",
     "description": "Label for current hotkeys"
   },
   "syncCurrentBar": {

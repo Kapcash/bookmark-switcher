@@ -92,7 +92,7 @@
     "description": "Label for hotkeys preference"
   },
   "focusMe": {
-    "message": "Focus me to capture keys",
+    "message": "Click here to set the hotkey",
     "description": "User hint for capturing keys"
   },
   "optional": {
@@ -100,11 +100,11 @@
     "description": "Optional text"
   },
   "currentHotkey": {
-    "message": "Chosen keyboard shortcut:",
+    "message": "Selected shortcut:",
     "description": "Label for current hotkeys"
   },
   "syncCurrentBar": {
-    "message": "Sync current profil between devices",
+    "message": "Sync current profile between devices",
     "description": "Input label for syncing current bar"
   }
 }
