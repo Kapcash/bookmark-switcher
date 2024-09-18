@@ -39,7 +39,6 @@ export function useBrowserStorage(sync = true) {
   // Watch changes on store and update ref
   browser.storage.onChanged.addListener((storedState) => {
     const isEqual = (key, val) => _isEqual(val.newValue, val.oldValue) || _isEqual(state[key], val.newValue)
-    const serializeStoredValue = val => (!!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0)) ? Object.values(val) : val
 
     Object.entries(storedState)
       .map(([key, { newValue, oldValue }]) => [key, { newValue: serializeStoredValue(newValue), oldValue: serializeStoredValue(oldValue) }])
@@ -56,6 +55,14 @@ export function useBrowserStorage(sync = true) {
   }
 }
 
+function serializeStoredValue (val) {
+  if (!!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0)) {
+    return Object.values(val)
+  }
+
+  return val
+}
+
 /** Return the storage object, depends on the current browser */
 function getStorage(sync = true) {
   const storageKey = sync ? 'sync' : 'local'
@@ -67,7 +74,7 @@ function getKey(key, storage) {
   let storagePromise = storage.get(key)
 
   return storagePromise.then((storage) => {
-    return storage[key]
+    return serializeStoredValue(storage[key])
   })
 }
 
