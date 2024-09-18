@@ -16,7 +16,7 @@
     "dev:background": "npm run build:background -- --mode development",
     "dev:web": "vite",
     "build": "cross-env NODE_ENV=production run-s clear build:web build:prepare build:background",
-    "build-firefox": "cross-env EXTENSION=firefox run-s clear build:web build:prepare build:background",
+    "build-firefox": "cross-env NODE_ENV=production cross-env EXTENSION=firefox run-s clear build:web build:prepare build:background",
     "build:prepare": "esno scripts/prepare.ts",
     "build:background": "vite build --config vite.config.background.mts",
     "build:web": "vite build",

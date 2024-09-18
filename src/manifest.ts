@@ -24,6 +24,11 @@ export async function getManifest() {
       open_in_tab: true,
       browser_style: true,
     },
+    browser_specific_settings: {
+      gecko: {
+        id: '{' + (process.env.ADDON_ID || 'missing id') + '}',
+      },
+    },
     background: isFirefox
       ? {
           scripts: ['dist/background/index.mjs'],
