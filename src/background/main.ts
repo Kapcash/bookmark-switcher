@@ -1,6 +1,6 @@
-import { onMessage, sendMessage } from 'webext-bridge/background'
 import { useBookmarkBars } from '@/composables/useBookmarks'
-import { NEXT_BAR_COMMAND_NAME } from '@/logic/constants'
+import { copyToFolder, removeFolder } from '@/composables/bookmarkHelper'
+import { NEXT_BAR_COMMAND_NAME, TOOLBAR_FOLDER_ID } from '@/logic/constants'
 import browser from 'webextension-polyfill'
 
 // only on dev mode
@@ -12,7 +12,7 @@ if (import.meta.hot) {
 }
 
 let switchToNextBar = () => { console.warn('Running action before the state is loaded!') }
-let switchToBar = () => { console.warn('Running action before the state is loaded!') }
+let switchToBar = (barId: string) => { console.warn('Running action before the state is loaded!') }
 
 useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => {
   // ==== BUTTON ACTION ==== //
@@ -22,10 +22,12 @@ useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => 
     currentBar.value = bookmarkBars.value[nextBarIndex] || null
   }
 
-  switchToBar = (barId) => {
+  switchToBar = (barId: string) => {
     const targetBar = bookmarkBars.value.find(bar => bar.id === barId)
     currentBar.value = targetBar || null
   }
+
+  syncToolbarAndCurrentSwitcherFolder(currentBar)
 
   // updatePopupIcon(computed(() => currentBar.value?.icon))
 })
@@ -46,45 +48,44 @@ browser.commands.onCommand.addListener((command) => {
   }
 })
 
-browser.runtime.onInstalled.addListener(() => {
-  // eslint-disable-next-line no-console
-  console.log('Extension installed')
+browser.runtime.onInstalled.addListener(async () => {
+  // let mainSwitcherFolder = await searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
+
+  // if (!mainSwitcherFolder) {
+  //   mainSwitcherFolder = await createBookmarkFolder(TOOLBARS_SWITCHER_NAME)
+  //   const children = await getFolderChildren(TOOLBAR_FOLDER_ID)
+  
+  //   const copyToTargetFolder = copyToFolder(mainSwitcherFolder.id)
+  //   for (const srcBookmark of children) {
+  //     await copyToTargetFolder(srcBookmark)
+  //   }
+  // }
 })
 
-let previousTabId = 0
-
-// communication example: send previous tab title from background page
-// see shim.d.ts for type declaration
-browser.tabs.onActivated.addListener(async ({ tabId }) => {
-  if (!previousTabId) {
-    previousTabId = tabId
-    return
-  }
-
-  let tab
-
-  try {
-    tab = await browser.tabs.get(previousTabId)
-    previousTabId = tabId
-  }
-  catch {
-    return
-  }
-
-  console.debug('previous tab', tab)
-  sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
-})
-
-onMessage('get-current-tab', async () => {
-  try {
-    const tab = await browser.tabs.get(previousTabId)
-    return {
-      title: tab?.title,
+/** This function enables the sync between the browser toolbar bookmarks
+ * and the backup folder of the currently selected toolbar, which holds a copy of the toolbar bookmarks.
+ */
+function syncToolbarAndCurrentSwitcherFolder (currentBar) {
+  browser.bookmarks.onCreated.addListener((newBookmarkId, bookmarkInfos) => {
+    const parentIsToolbar = bookmarkInfos.parentId === TOOLBAR_FOLDER_ID
+    if (parentIsToolbar) {
+      copyToFolder(currentBar.value.id)(bookmarkInfos)
     }
-  }
-  catch {
-    return {
-      title: undefined,
+  })
+
+  browser.bookmarks.onRemoved.addListener(async (deletedBookmarkId, removeInfos) => {
+    const parentIsToolbar = removeInfos.parentId === TOOLBAR_FOLDER_ID
+    if (parentIsToolbar) {
+      const duplicateBookmark = await browser.bookmarks.search({
+        title: removeInfos.node.title,
+        url: removeInfos.node.url,
+      })
+      const duplicateInSwitcherFolder = duplicateBookmark.find(bookmark => bookmark.parentId === currentBar.value.id)
+      if (duplicateInSwitcherFolder) {
+        removeFolder(duplicateInSwitcherFolder.id)
+      } else {
+        console.error(`Can't find the bookmark ${removeInfos.node.title} in the current toolbar folder, can't remove it.`)
+      }
     }
-  }
-})
+  })
+}
