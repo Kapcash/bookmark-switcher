@@ -28,9 +28,9 @@ export default {
   name: 'Popup',
   components: { BarsList, BarUpdatePanel },
   async setup () {
-    const { bars: bookmarkBars, currentBar, createBar, deleteBar } = await useBookmarkBars()
+    const { bars: bookmarkBars, currentBar, createBar, deleteBar, pinBookmark } = await useBookmarkBars()
     const { useBrowserStorageKey } = useBrowserStorage()
-    const excludedBookmarkIds = await useBrowserStorageKey('pinnedBookmarks')
+    const excludedBookmarkUrls = await useBrowserStorageKey('pinnedBookmarks')
     updatePopupIcon(computed(() => currentBar.value?.icon))
 
     const panel = shallowRef(BarsList)
@@ -53,13 +53,7 @@ export default {
           deleteBar(bar)
           listing()
         },
-        pin: (bookmarkId) => {
-          if (excludedBookmarkIds.value?.some(excluded => excluded === bookmarkId)) {
-            excludedBookmarkIds.value = excludedBookmarkIds.value.filter(excluded => excluded !== bookmarkId)
-          } else {
-            excludedBookmarkIds.value = [...new Set([...(excludedBookmarkIds.value || []), bookmarkId])]
-          }
-        },
+        pin: pinBookmark,
       }
       panel.value = BarUpdatePanel
     }

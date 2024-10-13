@@ -1,6 +1,6 @@
 <template>
   <form class="row" @submit.prevent>
-    <input v-model="barName" :placeholder="i18n.newBarPlaceholder" class="flex-auto">
+    <input v-model="barName" :placeholder="i18n.newBarPlaceholder" class="flex-auto h-full">
     <button type="submit" :disabled="!barName" @click="addBar" class="btn-icon">
       <svg xmlns="http://www.w3.org/2000/svg" height="16px" width="16px" viewBox="0 0 512 512">
         <path d="M492,236H276V20c0-11.046-8.954-20-20-20c-11.046,0-20,8.954-20,20v216H20c-11.046,0-20,8.954-20,20s8.954,20,20,20h216

@@ -21,7 +21,4 @@ const isDev = process.env.NODE_ENV !== 'production'
   padding-top: 1px;
   margin-top: 1px;
 }
-#app input {
-  padding-left: 10px;
-}
 </style>

@@ -2,12 +2,13 @@
   <form @submit.prevent="onSubmit">
     <BookmarkBarEdit v-model:name="barName" :icon="icon" @icon="$emit('icon')" />
 
-    <ul class="undecorate pl-16 overflow-h">
-      <li v-for="bookmark of bookmarks" :key="bookmark.id" class="row align-baseline no-overflow">
+    <ul class="undecorate overflow-h maxw-list px-2 py-1 text-neutral-200">
+      <li v-for="bookmark of bookmarks" :key="bookmark.id" class="row items-center no-overflow">
         <span class="flex-auto ellipsis">{{ bookmark.title || (bookmark.type === 'separator' ? '-----' : '') }}</span>
         <button
+          v-if="PIN_ENABLED"
           type="button"
-          class="btn-icon flex-0 no-bg"
+          class="btn-icon flex-0 no-bg ml-auto"
           :class="{ active: bookmark.pinned }"
           :disabled="!isActive || bookmark.type === 'separator'"
           :title="!isActive ? i18n.pinButtonInactiveTooltip : bookmark.pinned ? i18n.unpin : i18n.pin"
@@ -61,6 +62,8 @@ export default {
   },
   emits: ['submit', 'pin', 'cancel', 'remove', 'update:title', 'icon'],
   setup (props, ctx) {
+    const PIN_ENABLED = ref(false)
+
     const barName = ref(props.title)
     const confirmDelete = ref(false)
 
@@ -70,7 +73,7 @@ export default {
     }
 
     function pin (bookmark) {
-      ctx.emit('pin', bookmark.id)
+      ctx.emit('pin', bookmark)
     }
 
     return {
@@ -78,6 +81,7 @@ export default {
       confirmDelete,
       onSubmit,
       pin,
+      PIN_ENABLED,
     }
   },
 }
@@ -88,19 +92,17 @@ export default {
   overflow: hidden;
 }
 .overflow-h {
-  max-height: 8rem;
+  max-height: 16rem;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-right: 10px;
 }
 .ellipsis {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 200px;
 }
-.pl-16 {
-  padding-left: 16px;
+.maxw-list {
+  max-width: 240px;
 }
 #app ul li span {
   font-size: 0.875rem;

@@ -29,15 +29,19 @@ body #app {
   min-width: 240px;
 }
 
-#app svg {
+ul.undecorate {
+  list-style: none;
+}
+
+svg {
   fill: currentColor;
 }
 
 #app .row {
   display: flex;
-  justify-content: flex-end;
   height: 32px;
 }
+
 #app .row button {
   height: 100%
 }
@@ -47,12 +51,6 @@ body #app {
 }
 #app .align-baseline {
   align-items: baseline;
-}
-
-#app  ul.undecorate {
-  list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 #app input {
