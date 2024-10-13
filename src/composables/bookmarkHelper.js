@@ -38,8 +38,15 @@ export function removeFolder (folderId) {
   return browser.bookmarks.removeTree(folderId)
 }
 
+export async function removeAllChildren (folderId) {
+  const children = await getFolderChildren(folderId)
+  return Promise.all(
+    children.map(child => browser.bookmarks.remove(child.id))
+  )
+}
+
 /**
- * Switch two bookmark folders childrens
+ * Switch two bookmark folder's childrens
  * @param {string} srcFolderId The source bookmark folder id
  * @param {string} targetFolderId The target bookmark folder id
  */
@@ -47,9 +54,10 @@ export async function switchFolders (srcFolderId, targetFolderId, exceptions = [
   exceptions ||= []
   if (!srcFolderId || !targetFolderId) throw new Error('Source or target id is undefined!', srcFolderId, targetFolderId)
 
-  const [srcBookmarks, targetBookmarks] = await Promise.all([getFolderChildrens(srcFolderId), getFolderChildrens(targetFolderId)])
-  const targetBookmarksWithoutExceptions = targetBookmarks.filter(target => !exceptions.includes(target.id))
+  const srcBookmarks = await getFolderChildren(srcFolderId)
   const srcBookmarksWithoutExceptions = srcBookmarks.filter(target => !exceptions.includes(target.id))
+  const targetBookmarksWithoutExceptions = targetBookmarks.filter(target => !exceptions.includes(target.id))
+
   console.debug('SRC', srcFolderId, 'TARGET', targetFolderId)
   const moveToSrcFolder = moveToFolder(srcFolderId)
   const moveToTargetFolder = moveToFolder(targetFolderId)
@@ -66,10 +74,19 @@ export async function switchFolders (srcFolderId, targetFolderId, exceptions = [
 /** Get children bookmarks from a bookmark folder
  * @param {string} folderId The folder id to get childrens from
  */
-export function getFolderChildrens (folderId) {
+export function getFolderChildren (folderId) {
   return browser.bookmarks.getChildren(folderId)
 }
 
-function moveToFolder (targetFolderId) {
+export function moveToFolder (targetFolderId) {
   return (bookmark) => browser.bookmarks.move(bookmark.id, { parentId: targetFolderId })
+}
+
+export function copyToFolder (targetFolderId) {
+  return (bookmark) => browser.bookmarks.create({
+    index: bookmark.index,
+    title: bookmark.title,
+    url: bookmark.url,
+    parentId: targetFolderId,
+  })
 }
