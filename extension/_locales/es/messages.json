@@ -12,7 +12,7 @@
     "description": "Tooltip for back navigation button"
   },
   "emojiFilter": {
-    "message": "Filtrar...",
+    "message": "Filtrar... (solo inglés)",
     "description": "Placeholder for emoji search input"
   },
   "noneEmojiName": {

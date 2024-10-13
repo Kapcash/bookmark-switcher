@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-hidden">
     <div class="row">
       <button
         class="btn-icon"
@@ -48,7 +48,7 @@
         :class="{ active: selectedEmoji === emoji.character }"
         :title="emoji.unicodeName"
       >
-        {{ emoji.character }}
+        <span>{{ emoji.character }}</span>
         <input
           v-model="selectedEmoji"
           type="radio"
@@ -63,7 +63,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { EMOJI_API_KEY } from '@/logic/constants'
+import { EMOJI_API_KEY, MAX_EMOJI_VERSION } from '@/logic/constants'
 
 export default {
   name: 'EmojiPicker',
@@ -72,10 +72,23 @@ export default {
   },
   emits: ['update:modelValue', 'back'],
   async setup (props, ctx) {
-    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`).then(res => res.json()).catch((err) => {
-      console.error("Can't fetch emoji list", err)
-      return []
-    })
+    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`)
+      .then(res => res.json())
+      .then(emojis => {
+        return emojis.filter(char => {
+          try {
+            const [unicodeVersion] = char.slug.split('-')
+            const version = parseInt(unicodeVersion.slice(1), 10)
+            return version <= MAX_EMOJI_VERSION
+          } catch {
+            return true // If fail -> return all to avoid empty list in case of api breaking change.
+          }
+      })
+      })
+      .catch((err) => {
+        console.error("Can't fetch emoji list", err)
+        return []
+      })
 
     const selectedEmoji = computed({
       get () {
@@ -92,8 +105,6 @@ export default {
       return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value))
     })
 
-    console.log("emojiListFiltered", emojiListFiltered.length)
-
     return {
       filter,
       emojiListFiltered,
@@ -109,10 +120,12 @@ input.row {
 }
 fieldset {
   border: none;
+  padding: 3px;
 }
 .emoji-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  grid-gap: 4px;
   max-height: 400px;
   overflow-y: auto;
 }
@@ -121,7 +134,6 @@ label {
   text-align: center;
   font-size: 1.5rem;
   cursor: pointer;
-  margin: 3px;
   padding: 4px;
   border-radius: 8px;
 }
