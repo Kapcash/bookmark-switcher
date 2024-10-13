@@ -49,8 +49,8 @@ export async function getManifest() {
     commands: {
       next_bar: {
         suggested_key: {
-          mac: 'Alt+Space',
-          default: 'Ctrl+Space',
+          mac: 'Alt+Shift+B',
+          default: 'Ctrl+Shift+B',
         },
         description: 'Switch bookmark toolbars',
       },
