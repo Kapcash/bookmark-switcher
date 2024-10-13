@@ -3,7 +3,7 @@ import _throttle from 'lodash.throttle'
 import browser from 'webextension-polyfill'
 import { useBrowserStorage } from './useBrowserStorage'
 import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
-import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildren, createBookmarkFolder, copyToFolder } from './bookmarkHelper'
+import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildren, createBookmarkFolder, copyToFolder, removeAllChildren, setAllChildrenFromTo } from './bookmarkHelper'
 
 const switcherFolderPromise = searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 
@@ -98,7 +98,12 @@ export async function useBookmarkBars () {
   const switchToolbar = _throttle(_switchToolbar, 500, { trailing: false })
   async function _switchToolbar (fromId, targetId) {
     try {
-      await switchFolders(targetId, TOOLBAR_FOLDER_ID, excludedBookmarkIds.value)
+      // Remove all backup of current toolbar
+      await removeAllChildren(currentBookmarkFolderId.value)
+      // Copy all current toolbar to backup folder (i.e. update the toolbar backup)
+      await setAllChildrenFromTo(TOOLBAR_FOLDER_ID, currentBookmarkFolderId.value)
+      // Copy all selected bar to toolbar
+      await setAllChildrenFromTo(targetId, TOOLBAR_FOLDER_ID)
     } catch (err) {
       console.error('Error switching bars from ', fromId, ' to ', targetId, err)
     }

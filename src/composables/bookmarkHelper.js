@@ -90,3 +90,14 @@ export function copyToFolder (targetFolderId) {
     parentId: targetFolderId,
   })
 }
+
+export async function setAllChildrenFromTo (fromFolderId, targetFolderId) {
+  await removeAllChildren(targetFolderId)
+  
+  const copyToTargetFolder = copyToFolder(targetFolderId)
+  
+  const children = await getFolderChildren(fromFolderId)
+  for(const bookmark of children) {
+    await copyToTargetFolder(bookmark)
+  }
+}
