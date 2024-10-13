@@ -1,3 +1,18 @@
+<script>
+import BookmarkBarView from '@/components/BookmarkBarView.vue'
+import CreateBar from '@/components/CreateBar.vue'
+
+export default {
+  name: 'BarsList',
+  components: { BookmarkBarView, CreateBar },
+  props: {
+    bookmarkBars: { type: Array, required: true },
+    currentBarId: { type: String, required: true },
+  },
+  emits: ['switch', 'edit', 'create', 'remove'],
+}
+</script>
+
 <template>
   <div>
     <section>
@@ -17,21 +32,6 @@
     </section>
   </div>
 </template>
-
-<script>
-import BookmarkBarView from '@/components/BookmarkBarView.vue'
-import CreateBar from '@/components/CreateBar.vue'
-
-export default {
-  name: 'BarsList',
-  components: { BookmarkBarView, CreateBar },
-  props: {
-    bookmarkBars: { type: Array, required: true },
-    currentBarId: { type: String, required: true },
-  },
-  emits: ['switch', 'edit', 'create', 'remove'],
-}
-</script>
 
 <style scoped>
 .list {

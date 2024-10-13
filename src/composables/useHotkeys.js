@@ -1,45 +1,47 @@
 import { computed, ref, watch } from 'vue'
 import { useMagicKeys } from './useMagicKeys'
 
-export function useHotkeys (disabled) {
+export function useHotkeys(disabled) {
   const { ctrl, alt, meta, shift, current } = useMagicKeys()
 
   const modifiers = ['control', 'ctrl', 'os', 'cmd', 'command', 'meta', 'alt', 'shift']
   const modifiersAndShift = [...modifiers, 'shift']
   const namingMap = {
-    'os': 'Command',
-    'ctrl': 'Ctrl',
-    'alt': 'Alt',
-    'control': 'MacCtrl',
+    os: 'Command',
+    ctrl: 'Ctrl',
+    alt: 'Alt',
+    control: 'MacCtrl',
   }
 
   const currentModifiers = computed(() => {
-    if (!disabled.value) { return [] }
+    if (!disabled.value)
+      return []
     return Array.from(current).filter(key => modifiers.some(modif => key.toLowerCase().includes(modif)))
   })
 
   const normalKeys = computed(() => {
-    if (!disabled.value) { return [] }
+    if (!disabled.value)
+      return []
     return Array.from(current).filter(key => !modifiersAndShift.some(modif => key.toLowerCase().includes(modif)))
   })
 
-  function formatKey (key) {
-    if (key.toLowerCase().startsWith('key')) {
+  function formatKey(key) {
+    if (key.toLowerCase().startsWith('key'))
       return key.substring(3)
-    }
+
     if (!key.startsWith('arrow')) {
       key = key.replace('right', '')
       key = key.replace('left', '')
     }
-    if (key.startsWith('digit')) {
+    if (key.startsWith('digit'))
       key = key.replace('digit', '')
-    }
-    if (key === ' ') {
+
+    if (key === ' ')
       return 'Space'
-    }
-    if (namingMap[key]) {
+
+    if (namingMap[key])
       key = namingMap[key]
-    }
+
     return key
   }
 
@@ -50,17 +52,18 @@ export function useHotkeys (disabled) {
   const savedHotkeys = ref('')
 
   watch(currentModifiers, () => {
-    if (!isValid.value || !disabled.value) { return }
+    if (!isValid.value || !disabled.value)
+      return
     const newShortcut = Array.from(current).map(formatKey)
     savedHotkeys.value = newShortcut
   })
 
   watch(normalKeys, (newKeys, oldKeys) => {
-    if (!isValid.value || !disabled.value) { return }
+    if (!isValid.value || !disabled.value)
+      return
     const newShortcut = Array.from(current).map(formatKey)
-    if (newKeys.length > oldKeys.length) {
+    if (newKeys.length > oldKeys.length)
       savedHotkeys.value = newShortcut
-    }
   })
 
   // watchEffect(() => {
@@ -82,5 +85,5 @@ export function useHotkeys (disabled) {
     meta,
     shift,
     hasNormalKey,
-   }
+  }
 }

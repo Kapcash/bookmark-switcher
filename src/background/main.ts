@@ -1,7 +1,7 @@
+import browser from 'webextension-polyfill'
 import { useBookmarkBars } from '@/composables/useBookmarks'
 import { copyToFolder, removeFolder } from '@/composables/bookmarkHelper'
 import { NEXT_BAR_COMMAND_NAME, TOOLBAR_FOLDER_ID } from '@/logic/constants'
-import browser from 'webextension-polyfill'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -11,8 +11,12 @@ if (import.meta.hot) {
   import('./contentScriptHMR')
 }
 
-let switchToNextBar = () => { console.warn('Running action before the state is loaded!') }
-let switchToBar = (barId: string) => { console.warn('Running action before the state is loaded!') }
+let switchToNextBar = () => {
+  console.warn('Running action before the state is loaded!')
+}
+let switchToBar = (_barId: string) => {
+  console.warn('Running action before the state is loaded!')
+}
 
 useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => {
   // ==== BUTTON ACTION ==== //
@@ -31,9 +35,8 @@ useBookmarkBars().then(({ bars: bookmarkBars, currentBar, currentBarIndex }) => 
 })
 
 browser.runtime.onMessage.addListener(({ currentBarId }) => {
-  if (currentBarId) {
+  if (currentBarId)
     switchToBar(currentBarId)
-  }
 })
 
 browser.commands.onCommand.addListener((command) => {
@@ -49,15 +52,15 @@ browser.commands.onCommand.addListener((command) => {
 browser.runtime.onInstalled.addListener(async () => {
 })
 
-/** This function enables the sync between the browser toolbar bookmarks
+/**
+ * This function enables the sync between the browser toolbar bookmarks
  * and the backup folder of the currently selected toolbar, which holds a copy of the toolbar bookmarks.
  */
-function syncToolbarAndCurrentSwitcherFolder (currentBar) {
+function syncToolbarAndCurrentSwitcherFolder(currentBar) {
   browser.bookmarks.onCreated.addListener((newBookmarkId, bookmarkInfos) => {
     const parentIsToolbar = bookmarkInfos.parentId === TOOLBAR_FOLDER_ID
-    if (parentIsToolbar) {
+    if (parentIsToolbar)
       copyToFolder(currentBar.value.id)(bookmarkInfos)
-    }
   })
 
   browser.bookmarks.onRemoved.addListener(async (deletedBookmarkId, removeInfos) => {
@@ -68,11 +71,10 @@ function syncToolbarAndCurrentSwitcherFolder (currentBar) {
         url: removeInfos.node.url,
       })
       const duplicateInSwitcherFolder = duplicateBookmark.find(bookmark => bookmark.parentId === currentBar.value.id)
-      if (duplicateInSwitcherFolder) {
+      if (duplicateInSwitcherFolder)
         removeFolder(duplicateInSwitcherFolder.id)
-      } else {
+      else
         console.error(`Can't find the bookmark ${removeInfos.node.title} in the current toolbar folder, can't remove it.`)
-      }
     }
   })
 }

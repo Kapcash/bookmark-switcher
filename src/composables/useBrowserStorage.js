@@ -21,14 +21,13 @@ export function useBrowserStorage(sync = true) {
       console.debug('Loading storage value', `${key}:`, initialStoredValue)
       state[key] = initialStoredValue ?? null
 
-      if (initialStoredValue == undefined && !!defaultValue) {
+      if (initialStoredValue == null && !!defaultValue)
         state[key] = defaultValue
-      }
 
       watch(() => state[key], (newValue, oldValue) => {
-        if (newValue === undefined) {
+        if (newValue === undefined)
           state[key] = null
-        }
+
         console.debug('Ref updated!', `${key}:`, oldValue, '->', newValue)
         setKey(key, newValue, storage)
       })
@@ -55,10 +54,9 @@ export function useBrowserStorage(sync = true) {
   }
 }
 
-function serializeStoredValue (val) {
-  if (!!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0)) {
+function serializeStoredValue(val) {
+  if (!!val && typeof val === 'object' && (Object.prototype.hasOwnProperty.call(val, '0') || Object.keys(val).length === 0))
     return Object.values(val)
-  }
 
   return val
 }
@@ -71,7 +69,7 @@ function getStorage(sync = true) {
 
 /** Async! Get a stored value from a given key */
 function getKey(key, storage) {
-  let storagePromise = storage.get(key)
+  const storagePromise = storage.get(key)
 
   return storagePromise.then((storage) => {
     return serializeStoredValue(storage[key])

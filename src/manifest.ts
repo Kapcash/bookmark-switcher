@@ -26,7 +26,7 @@ export async function getManifest() {
     },
     browser_specific_settings: {
       gecko: {
-        id: '{' + (process.env.ADDON_ID || 'missing id') + '}',
+        id: `{${process.env.ADDON_ID || 'missing id'}}`,
       },
     },
     background: isFirefox

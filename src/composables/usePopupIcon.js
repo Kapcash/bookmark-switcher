@@ -1,26 +1,25 @@
 import { watch } from 'vue'
 import browser from 'webextension-polyfill'
 
-export function updatePopupIcon (emojiRef) {
+export function updatePopupIcon(emojiRef) {
   updateActionIcon(emojiRef.value)
   watch(emojiRef, (newEmoji) => {
     updateActionIcon(newEmoji)
   })
 }
 
-function updateActionIcon (emoji) {
+function updateActionIcon(emoji) {
   const isDarkTheme = (typeof window !== 'undefined') ? window.matchMedia('(prefers-color-scheme: dark)').matches : false
 
-  function getImageData (size = 64) {
+  function getImageData(size = 64) {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
     const baseImage = new Image()
 
-    if (isDarkTheme) {
+    if (isDarkTheme)
       baseImage.src = import(`../assets/icons/bookmark-switcher-logo-stroke-${size}.png`)
-    } else {
+    else
       baseImage.src = import(`../assets/icons/bookmark-switcher-logo-plain-${size}.png`)
-    }
 
     return new Promise((resolve) => {
       baseImage.onload = function () {
@@ -28,7 +27,8 @@ function updateActionIcon (emoji) {
           ctx.drawImage(baseImage, 0, 0)
           ctx.font = `${Math.floor(size * 0.85)}px sans-serif`
           ctx.fillText(emoji, Math.floor(size * 0.25), Math.floor(size))
-        } else {
+        }
+        else {
           ctx.drawImage(baseImage, 0, 0)
         }
 

@@ -4,6 +4,7 @@
 import { computed, reactive, ref, unref } from 'vue-demi'
 import { noop } from '@vueuse/shared'
 import { useEventListener } from '@vueuse/core'
+
 export const DefaultMagicKeysAliasMap = {
   ctrl: 'control',
   command: 'meta',

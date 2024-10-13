@@ -1,3 +1,57 @@
+<script>
+import { computed, ref } from 'vue'
+import { EMOJI_API_KEY, MAX_EMOJI_VERSION } from '@/logic/constants'
+
+export default {
+  name: 'EmojiPicker',
+  props: {
+    modelValue: { type: [String, null] },
+  },
+  emits: ['update:modelValue', 'back'],
+  async setup(props, ctx) {
+    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`)
+      .then(res => res.json())
+      .then((emojis) => {
+        return emojis.filter((char) => {
+          try {
+            const [unicodeVersion] = char.slug.split('-')
+            const version = Number.parseInt(unicodeVersion.slice(1), 10)
+            return version <= MAX_EMOJI_VERSION
+          }
+          catch {
+            return true // If fail -> return all to avoid empty list in case of api breaking change.
+          }
+        })
+      })
+      .catch((err) => {
+        console.error('Can\'t fetch emoji list', err)
+        return []
+      })
+
+    const selectedEmoji = computed({
+      get() {
+        return props.modelValue
+      },
+      set(newEmoji) {
+        ctx.emit('update:modelValue', newEmoji)
+      },
+    })
+
+    const filter = ref('')
+
+    const emojiListFiltered = computed(() => {
+      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value))
+    })
+
+    return {
+      filter,
+      emojiListFiltered,
+      selectedEmoji,
+    }
+  },
+}
+</script>
+
 <template>
   <div class="overflow-hidden">
     <div class="row">
@@ -31,7 +85,7 @@
     <fieldset class="emoji-grid">
       <label
         :title="i18n.noneEmojiName"
-        :class="['default', { active: !selectedEmoji }]"
+        class="default" :class="[{ active: !selectedEmoji }]"
       >
         <input
           v-model="selectedEmoji"
@@ -60,59 +114,6 @@
     </fieldset>
   </div>
 </template>
-
-<script>
-import { computed, ref } from 'vue'
-import { EMOJI_API_KEY, MAX_EMOJI_VERSION } from '@/logic/constants'
-
-export default {
-  name: 'EmojiPicker',
-  props: {
-    modelValue: { type: [String, null] },
-  },
-  emits: ['update:modelValue', 'back'],
-  async setup (props, ctx) {
-    const emojiList = await fetch(`https://emoji-api.com/emojis?access_key=${EMOJI_API_KEY}`)
-      .then(res => res.json())
-      .then(emojis => {
-        return emojis.filter(char => {
-          try {
-            const [unicodeVersion] = char.slug.split('-')
-            const version = parseInt(unicodeVersion.slice(1), 10)
-            return version <= MAX_EMOJI_VERSION
-          } catch {
-            return true // If fail -> return all to avoid empty list in case of api breaking change.
-          }
-      })
-      })
-      .catch((err) => {
-        console.error("Can't fetch emoji list", err)
-        return []
-      })
-
-    const selectedEmoji = computed({
-      get () {
-        return props.modelValue
-      },
-      set (newEmoji) {
-        ctx.emit('update:modelValue', newEmoji)
-      },
-    })
-
-    const filter = ref('')
-
-    const emojiListFiltered = computed(() => {
-      return emojiList.filter(emoji => emoji.unicodeName.includes(filter.value))
-    })
-
-    return {
-      filter,
-      emojiListFiltered,
-      selectedEmoji,
-    }
-  },
-}
-</script>
 
 <style scoped>
 input.row {

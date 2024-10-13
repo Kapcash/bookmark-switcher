@@ -1,14 +1,83 @@
+<script>
+import browser from 'webextension-polyfill'
+import ShortcutInput from '@/components/ShortcutInput.vue'
+import KeyState from '@/components/KeyState.vue'
+import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
+import { useBrowserStorage } from '@/composables/useBrowserStorage'
+
+export default {
+  name: 'Settings',
+  components: { ShortcutInput, KeyState },
+  async setup() {
+    const { useBrowserStorageKey } = useBrowserStorage()
+    const syncCurrentBar = await useBrowserStorageKey(OPTION_KEY_SYNC_BAR, true)
+    return {
+      syncCurrentBar,
+    }
+  },
+  data() {
+    return {
+      hotkeys: [],
+      msg: '',
+      changedShortcut: false,
+      color: '',
+      updateCommandSupported: !!browser.commands.update,
+    }
+  },
+  computed: {
+    currentHotkeyString() {
+      return this.hotkeys.map(key => key[0]?.toUpperCase() + key.slice(1)).join(' + ')
+    },
+  },
+  watch: {
+    hotkeys(newHotkeys, oldHotkeys) {
+      if (oldHotkeys?.length > 0) {
+        this.changedShortcut = true
+        this.msg = ''
+      }
+    },
+  },
+  async created() {
+    const cmds = await browser.commands.getAll()
+
+    const nextBarCmd = cmds.find(cmd => cmd.name === NEXT_BAR_COMMAND_NAME)
+    this.hotkeys = nextBarCmd?.shortcut.split('+') || []
+    this.changedShortcut = false
+  },
+  methods: {
+    async updateShortcut() {
+      try {
+        await browser.commands.update({
+          name: NEXT_BAR_COMMAND_NAME,
+          shortcut: this.hotkeys.map(key => key[0].toUpperCase() + key.slice(1)).join('+'),
+        })
+        this.color = 'success'
+        this.msg = this.i18n.shortcutSuccess
+        this.changedShortcut = false
+      }
+      catch (error) {
+        console.error('Update shortcut error:', error)
+        this.color = 'error'
+        this.msg = this.i18n.shortcutError
+      }
+    },
+  },
+}
+</script>
+
 <template>
   <div class="p-6">
     <section v-if="updateCommandSupported">
-      <h2 class="mb-3">{{ i18n.updateHotkeys }}</h2>
+      <h2 class="mb-3">
+        {{ i18n.updateHotkeys }}
+      </h2>
 
       <div class="shortcut-form">
         <ShortcutInput
           v-model="hotkeys"
           class="shortcut-input"
         />
-  
+
         <div class="column">
           <div class="current-shortcut">
             {{ i18n.currentHotkey }}
@@ -16,7 +85,7 @@
               {{ currentHotkeyString }}
             </KeyState>
           </div>
-  
+
           <button
             class="save"
             :disabled="!changedShortcut"
@@ -41,72 +110,6 @@
     </section>
   </div>
 </template>
-
-<script>
-import ShortcutInput from '@/components/ShortcutInput.vue';
-import KeyState from '@/components/KeyState.vue';
-import { NEXT_BAR_COMMAND_NAME, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
-import { useBrowserStorage } from '@/composables/useBrowserStorage'
-import browser from 'webextension-polyfill'
-
-export default {
-  name: 'Settings',
-  components: { ShortcutInput, KeyState },
-  async setup () {
-    const { useBrowserStorageKey } = useBrowserStorage()
-    const syncCurrentBar = await useBrowserStorageKey(OPTION_KEY_SYNC_BAR, true)
-    return {
-      syncCurrentBar,
-    }
-  },
-  data () {
-    return {
-      hotkeys: [],
-      msg: '',
-      changedShortcut: false,
-      color: '',
-      updateCommandSupported: !!browser.commands.update,
-    }
-  },
-  computed: {
-    currentHotkeyString() {
-      return this.hotkeys.map(key => key[0]?.toUpperCase() + key.slice(1)).join(' + ')
-    },
-  },
-  watch: {
-    hotkeys (newHotkeys, oldHotkeys) {
-      if (oldHotkeys?.length > 0) {
-        this.changedShortcut = true
-        this.msg = '';
-      }
-    },
-  },
-  async created () {
-    const cmds = await browser.commands.getAll()
-
-    const nextBarCmd = cmds.find(cmd => cmd.name === NEXT_BAR_COMMAND_NAME)
-    this.hotkeys = nextBarCmd?.shortcut.split('+') || []
-    this.changedShortcut = false
-  },
-  methods: {
-    async updateShortcut () {
-      try {
-        await browser.commands.update({
-          name: NEXT_BAR_COMMAND_NAME,
-          shortcut: this.hotkeys.map(key => key[0].toUpperCase() + key.slice(1)).join('+'),
-        })
-        this.color = 'success'
-        this.msg = this.i18n.shortcutSuccess
-        this.changedShortcut = false
-      } catch (error) {
-        console.error("Update shortcut error:", error)
-        this.color = 'error'
-        this.msg = this.i18n.shortcutError
-      }
-    },
-  },
-}
-</script>
 
 <style>
 body {

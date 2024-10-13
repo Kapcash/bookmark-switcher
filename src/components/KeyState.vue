@@ -1,10 +1,19 @@
+<script setup>
+defineProps({
+  active: { type: Boolean, default: false },
+  placeholder: { type: String, default: 'Press' },
+  empty: { type: Boolean, default: false },
+  optional: { type: Boolean, default: false },
+})
+</script>
+
 <template>
   <div
     class="key-card relative"
     :class="[
       active ? 'bg-active' : 'bg-inactive',
       empty ? 'color-placeholder' : 'color-grey',
-      { optional }
+      { optional },
     ]"
     :data-i18n="i18n.optional"
   >
@@ -16,16 +25,6 @@
     </slot>
   </div>
 </template>
-
-<script setup>
-defineProps({
-  active: { type: Boolean, default: false },
-  placeholder: { type: String, default: 'Press' },
-  empty: { type: Boolean, default: false },
-  optional: { type: Boolean, default: false },
-});
-</script>
-
 
 <style scoped>
 .bg-active {

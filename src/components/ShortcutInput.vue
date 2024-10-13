@@ -1,7 +1,57 @@
+<script setup>
+import { computed, defineEmits, ref, watch } from 'vue'
+import { useFocus, watchOnce } from '@vueuse/core'
+import { useHotkeys } from '../composables/useHotkeys'
+import KeyState from './KeyState.vue'
+
+defineProps({
+  modelValue: { type: Array, required: true, default: () => [] },
+})
+const emit = defineEmits(['update:modelValue'])
+const hotkeys = ref(null)
+const { focused } = useFocus(hotkeys)
+
+const dirty = ref(false)
+
+const isMacOS = navigator.userAgent.includes('Mac OS X')
+
+const {
+  normalKeys,
+  savedHotkeys,
+  hasModifier,
+  formatKey,
+  current,
+  ctrl,
+  alt,
+  meta,
+  shift,
+  hasNormalKey,
+} = useHotkeys(focused)
+
+watch(focused, (isFocused) => {
+  if (isFocused) {
+    watchOnce(current, () => {
+      dirty.value = true
+    })
+  }
+  else {
+    dirty.value = false
+  }
+})
+
+const normalKeysString = computed(() => {
+  return normalKeys.value.map(formatKey).join(' + ')
+})
+
+watch(savedHotkeys, (newHotkeys) => {
+  emit('update:modelValue', newHotkeys)
+})
+</script>
+
 <template>
   <div ref="hotkeys" tabindex="0" class="shortcut-grid">
     <span class="legend">{{ i18n.focusMe }}</span>
-    <div class="key-column required" :class="{ 'invalid': !hasModifier && dirty }">
+    <div class="key-column required" :class="{ invalid: !hasModifier && dirty }">
       <KeyState :active="focused && ctrl">
         Ctrl
       </KeyState>
@@ -18,63 +68,13 @@
         Shift
       </KeyState>
     </div>
-    <div class="key-column required" :class="{ 'invalid': !hasNormalKey && dirty }">
+    <div class="key-column required" :class="{ invalid: !hasNormalKey && dirty }">
       <KeyState placeholder="Press" :empty="!normalKeysString">
         {{ normalKeysString }}
       </KeyState>
     </div>
   </div>
 </template>
-
-<script setup>
-  import { computed, watch, defineEmits, ref } from 'vue'
-  import { watchOnce, useFocus } from '@vueuse/core'
-  import { useHotkeys } from '../composables/useHotkeys'
-  import KeyState from './KeyState.vue';
-
-const emit = defineEmits(['update:modelValue'])
-defineProps({
-  modelValue: { type: Array, required: true, default: () => [] },
-})
-
-const hotkeys = ref(null)
-const { focused } = useFocus(hotkeys)
-
-const dirty = ref(false)
-
-watch(focused, (isFocused) => {
-  if (isFocused) {
-    watchOnce(current, () => {
-      dirty.value = true
-    })
-  } else {
-    dirty.value = false
-  }
-})
-
-const isMacOS = navigator.userAgent.includes('Mac OS X')
-
-const {
-  normalKeys,
-  savedHotkeys,
-  hasModifier,
-  formatKey,
-  current,
-  ctrl,
-  alt,
-  meta,
-  shift,
-  hasNormalKey,
-} = useHotkeys(focused);
-
-const normalKeysString = computed(() => {
-  return normalKeys.value.map(formatKey).join(' + ')
-})
-
-watch(savedHotkeys, (newHotkeys) => {
-  emit('update:modelValue', newHotkeys)
-})
-</script>
 
 <style scoped>
 .shortcut-grid {

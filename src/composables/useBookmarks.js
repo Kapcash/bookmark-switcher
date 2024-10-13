@@ -1,13 +1,13 @@
-import { ref, reactive, readonly, watch, computed } from 'vue'
+import { computed, reactive, readonly, ref, watch } from 'vue'
 import _throttle from 'lodash.throttle'
 import browser from 'webextension-polyfill'
 import { useBrowserStorage } from './useBrowserStorage'
-import { TOOLBAR_FOLDER_ID, TOOLBARS_SWITCHER_NAME, STORAGE_CURRENT_TOOLBAR_ATTR, OPTION_KEY_SYNC_BAR } from '@/logic/constants'
-import { updateBarName, removeFolder, switchFolders, searchBookmarkByTitle, getFolderChildren, createBookmarkFolder, copyToFolder, removeAllChildren, copyFromTo, updateBookmarkIndex } from './bookmarkHelper'
+import { copyFromTo, copyToFolder, createBookmarkFolder, getFolderChildren, removeAllChildren, removeFolder, searchBookmarkByTitle, updateBarName } from './bookmarkHelper'
+import { OPTION_KEY_SYNC_BAR, STORAGE_CURRENT_TOOLBAR_ATTR, TOOLBARS_SWITCHER_NAME, TOOLBAR_FOLDER_ID } from '@/logic/constants'
 
 const switcherFolderPromise = searchBookmarkByTitle(TOOLBARS_SWITCHER_NAME).then(res => res[0])
 
-export async function useBookmarkBars () {
+export async function useBookmarkBars() {
   const { useBrowserStorageKey, resetStorage } = useBrowserStorage()
   const syncCurrentBar = await useBrowserStorageKey(OPTION_KEY_SYNC_BAR, true)
   const barIcons = await useBrowserStorageKey('barIcons')
@@ -16,7 +16,8 @@ export async function useBookmarkBars () {
   let currentBookmarkFolderId
   if (syncCurrentBar.value) {
     currentBookmarkFolderId = await useBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
-  } else {
+  }
+  else {
     const { useBrowserStorageKey: useLocalBrowserStorageKey } = useBrowserStorage(false)
     currentBookmarkFolderId = await useLocalBrowserStorageKey(STORAGE_CURRENT_TOOLBAR_ATTR)
   }
@@ -30,7 +31,7 @@ export async function useBookmarkBars () {
     .then(folders =>
       Promise.all(folders.map(folder => useBookmarkFolder(barIcons, excludedBookmarkUrls)(folder, folder.id === currentBookmarkFolderId.value ? TOOLBAR_FOLDER_ID : undefined))),
     )
-    .catch(err => {
+    .catch((err) => {
       console.error('An error happened while fetching current bars', err)
       throw err
     })
@@ -48,21 +49,20 @@ export async function useBookmarkBars () {
     const folderNotAlreadyAdded = bars.value.every(bar => bar.id !== newBookmarkId)
 
     if (isFolder && parentIsSwitcherFolder && folderNotAlreadyAdded) {
-      useBookmarkFolder(barIcons, excludedBookmarkUrls)(bookmarkInfos, undefined).then(newFolder => {
+      useBookmarkFolder(barIcons, excludedBookmarkUrls)(bookmarkInfos, undefined).then((newFolder) => {
         bars.value.push(newFolder)
       })
     }
   })
 
   browser.bookmarks.onRemoved.addListener((deletedBookmarkId, removeInfos) => {
-    if (removeInfos.parentId === switcherFolder.id) {
+    if (removeInfos.parentId === switcherFolder.id)
       deleteBar(deletedBookmarkId)
-    }
   })
 
   // ===== FUNCTIONS ===== //
 
-  function deleteBar ({ id: barId }) {
+  function deleteBar({ id: barId }) {
     const barIndex = bars.value.findIndex(bar => bar.id === barId)
     if (barIndex >= 0) {
       return removeFolder(bars.value[barIndex].id).then(() => {
@@ -71,34 +71,32 @@ export async function useBookmarkBars () {
     }
   }
 
-  function createAnonymousCurrentBarFolder () {
+  function createAnonymousCurrentBarFolder() {
     const anonymousName = browser.i18n.getMessage('defaultBarName') || '🔖'
     return createBar(anonymousName, TOOLBAR_FOLDER_ID)
   }
 
-
-  async function createBar (barName, copyFrom) {
+  async function createBar(barName, copyFrom) {
     try {
       const newFolder = await createBookmarkFolder(barName, switcherFolder.id)
 
       if (copyFrom) {
         const children = await getFolderChildren(copyFrom)
         const copyToTargetFolder = copyToFolder(newFolder.id)
-        for(const bookmark of children) {
+        for (const bookmark of children)
           await copyToTargetFolder(bookmark)
-        }
       }
-  
+
       return useBookmarkFolder(barIcons, excludedBookmarkUrls)(newFolder)
-    } catch(err) {
+    }
+    catch (err) {
       console.error('An error occurred while creating a new bar', err)
     }
   }
 
   const switchToolbar = _throttle(_switchToolbar, 500, { trailing: false })
-  async function _switchToolbar (fromId, targetId) {
+  async function _switchToolbar(fromId, targetId) {
     try {
-      debugger
       // Remove all backup of current toolbar
       await removeAllChildren(currentBookmarkFolderId.value)
       // Copy all current toolbar to backup folder (i.e. update the toolbar backup)
@@ -107,18 +105,18 @@ export async function useBookmarkBars () {
       await removeAllChildren(TOOLBAR_FOLDER_ID, excludedBookmarkUrls.value)
       // Copy all bookmark in the selected bar to toolbar
       await copyFromTo(targetId, TOOLBAR_FOLDER_ID)
-    } catch (err) {
+    }
+    catch (err) {
       console.error('Error switching bars from ', fromId, ' to ', targetId, err)
     }
     switchToolbar.cancel()
   }
 
-  async function pinBookmark (bookmark) {
-    if (excludedBookmarkUrls.value?.some(excluded => excluded === bookmark.url)) {
+  async function pinBookmark(bookmark) {
+    if (excludedBookmarkUrls.value?.some(excluded => excluded === bookmark.url))
       excludedBookmarkUrls.value = excludedBookmarkUrls.value.filter(excluded => excluded !== bookmark.url)
-    } else {
+    else
       excludedBookmarkUrls.value = [...new Set([...(excludedBookmarkUrls.value || []), bookmark.url])]
-    }
   }
 
   // ===== WATCHERS ===== //
@@ -129,16 +127,16 @@ export async function useBookmarkBars () {
 
   watch(currentBookmarkFolderId, (newCurrentId) => {
     changedBarFromExternalScript = newCurrentId !== currentBar.value?.id
-    if (changedBarFromExternalScript) {
+    if (changedBarFromExternalScript)
       currentBar.value = bars.value.find(bar => bar.id === newCurrentId)
-    }
   })
 
   watch(currentBar, async (newBar, oldBar) => {
     if (oldBar && !changedBarFromExternalScript) {
       if (newBar) {
         await switchToolbar(oldBar.id, newBar.id)
-      } else {
+      }
+      else {
         // Setting current to null -> rollback to previous value
         currentBar.value = oldBar
       }
@@ -164,29 +162,31 @@ export async function useBookmarkBars () {
   }
 }
 
-const useBookmarkFolder = (storedIcons, excludedBookmarkUrls) => async (bookmarkFolder, childrensParentId) => {
-  const childrenBookmarks = await getFolderChildren(childrensParentId || bookmarkFolder.id)
-    .then(childrens => childrens.map(children => ({
-      ...children,
-      pinned: computed(() => excludedBookmarkUrls.value?.some(excludedId => excludedId === children.url)),
-    })))
-    .catch(err => {
-      console.error("Error while fetching childrens", err)
-      throw err
+function useBookmarkFolder(storedIcons, excludedBookmarkUrls) {
+  return async (bookmarkFolder, childrensParentId) => {
+    const childrenBookmarks = await getFolderChildren(childrensParentId || bookmarkFolder.id)
+      .then(childrens => childrens.map(children => ({
+        ...children,
+        pinned: computed(() => excludedBookmarkUrls.value?.some(excludedId => excludedId === children.url)),
+      })))
+      .catch((err) => {
+        console.error('Error while fetching childrens', err)
+        throw err
+      })
+    const bar = reactive({
+      ...bookmarkFolder,
+      bookmarks: readonly(childrenBookmarks),
+      icon: storedIcons.value?.[bookmarkFolder.id] || null,
     })
-  const bar = reactive({
-    ...bookmarkFolder,
-    bookmarks: readonly(childrenBookmarks),
-    icon: storedIcons.value?.[bookmarkFolder.id] || null,
-  })
 
-  watch(() => bar.title, (newName) => {
-    updateBarName(bar.id, newName)
-  })
+    watch(() => bar.title, (newName) => {
+      updateBarName(bar.id, newName)
+    })
 
-  watch(() => bar.icon, (newIcon) => {
-    storedIcons.value = { ...storedIcons.value, [bar.id]: newIcon }
-  })
+    watch(() => bar.icon, (newIcon) => {
+      storedIcons.value = { ...storedIcons.value, [bar.id]: newIcon }
+    })
 
-  return bar
+    return bar
+  }
 }
