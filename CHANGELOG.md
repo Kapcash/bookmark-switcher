@@ -1,3 +1,14 @@
+## 3.0.0
+
+- Safer and more performant switch between toolbars. Now, we copy the bars to the browser Toolbar instead of moving bookmarks all around.
+- Disabled "pin" feature: not compatible with the performance improvements, and low usage by users.
+- Fixed emojis list for older Operative Systems (only show up to Unicode V13 emojis).
+- Improved options page texts.
+- Add options page for Chrome (but the browser doesn't allow to dynamically change the extension shortcut, so this feature is disabled for Chrome).
+- [Technical]
+  - Upgrade to Manifest V3
+  - Upgrade to use "Vitesse" framework
+  - Full cross browser support
 
 ## 2.1.0
 
