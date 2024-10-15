@@ -44,7 +44,7 @@ export function removeFolder(folderId) {
   return browser.bookmarks.removeTree(folderId)
 }
 
-export async function removeAllChildren(folderId, exceptions = []) {
+export async function removeAllChildren(folderId, exceptions) {
   const children = await getFolderChildren(folderId, exceptions)
   return Promise.all(
     children.map(child => browser.bookmarks.remove(child.id)),
@@ -56,7 +56,7 @@ export async function removeAllChildren(folderId, exceptions = []) {
  * @param {string} srcFolderId The source bookmark folder id
  * @param {string} targetFolderId The target bookmark folder id
  */
-export async function switchFolders(srcFolderId, targetFolderId, exceptions = []) {
+export async function switchFolders(srcFolderId, targetFolderId, exceptions) {
   exceptions ||= []
   if (!srcFolderId || !targetFolderId)
     throw new Error('Source or target id is undefined!', srcFolderId, targetFolderId)
@@ -83,7 +83,7 @@ export async function switchFolders(srcFolderId, targetFolderId, exceptions = []
 export function getFolderChildren(folderId, filterOut) {
   return browser.bookmarks.getChildren(folderId).then((children) => {
     if (filterOut?.length)
-      return children.filter(bookmark => !filterOut.includes(bookmark.url))
+      return children.filter(bookmark => !filterOut.includes(bookmark.id))
 
     return children
   })

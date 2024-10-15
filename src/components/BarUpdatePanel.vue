@@ -14,7 +14,8 @@ export default {
   },
   emits: ['submit', 'pin', 'cancel', 'remove', 'update:title', 'icon'],
   setup(props, ctx) {
-    const PIN_ENABLED = ref(false)
+    const UNKNOWN_BOOKMARK_NAME = '?'
+    const PIN_ENABLED = ref(true)
 
     const barName = ref(props.title)
     const confirmDelete = ref(false)
@@ -34,6 +35,7 @@ export default {
       onSubmit,
       pin,
       PIN_ENABLED,
+      UNKNOWN_BOOKMARK_NAME,
     }
   },
 }
@@ -45,7 +47,7 @@ export default {
 
     <ul class="undecorate overflow-h maxw-list px-2 py-1 text-neutral-200">
       <li v-for="bookmark of bookmarks" :key="bookmark.id" class="row items-center no-overflow">
-        <span class="flex-auto ellipsis">{{ bookmark.title || (bookmark.type === 'separator' ? '-----' : '') }}</span>
+        <span class="flex-auto ellipsis">{{ bookmark.title || (bookmark.type === 'separator' ? '-----' : UNKNOWN_BOOKMARK_NAME) }}</span>
         <button
           v-if="PIN_ENABLED"
           type="button"

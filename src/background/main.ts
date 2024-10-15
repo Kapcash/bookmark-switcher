@@ -1,6 +1,5 @@
 import browser from 'webextension-polyfill'
 import { useBookmarkBars } from '@/composables/useBookmarks'
-import { useBrowserStorage } from '@/composables/useBrowserStorage'
 import { copyToFolder, removeFolder } from '@/composables/bookmarkHelper'
 import { NEXT_BAR_COMMAND_NAME, TOOLBAR_FOLDER_ID } from '@/logic/constants'
 
@@ -51,10 +50,6 @@ browser.commands.onCommand.addListener((command) => {
 })
 
 browser.runtime.onInstalled.addListener(async () => {
-  const { useBrowserStorageKey } = useBrowserStorage()
-  // v3.0.0: pin featured has been disabled. We reset the current value for all users.
-  const excludedBookmarkUrls = await useBrowserStorageKey('pinnedBookmarks')
-  excludedBookmarkUrls.value = []
 })
 
 /**
