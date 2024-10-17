@@ -22,7 +22,7 @@
     "build:web": "vite build",
     "pack": "cross-env NODE_ENV=production run-p pack:*",
     "pack:zip:firefox": "npm run build:firefox && ./pack-zip.sh firefox",
-    "pack:zip": "./pack-zip.sh",
+    "pack:zip": "./pack-zip.sh chrome",
     "pack:crx": "crx pack extension -o ./extension.crx",
     "pack:xpi": "cross-env WEB_EXT_ARTIFACTS_DIR=./ web-ext build --source-dir ./extension --filename extension.xpi --overwrite-dest",
     "start:chromium": "web-ext run --source-dir ./extension --target=chromium",

@@ -55,7 +55,7 @@ export async function getManifest() {
         description: 'Switch bookmark toolbars',
       },
     },
-    host_permissions: ['*://*/*'],
+    host_permissions: isDev ? ['*://*/*'] : [],
     // content_scripts: [
     //   {
     //     matches: [
